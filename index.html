@@ -235,63 +235,68 @@
 
     <div class="footer">© 2026 MMM Nexus • Founder Edition</div>
   </div>
+<script>
+  function setApiKey() {
+    const current = localStorage.getItem('mmm_gemini_key') || '';
+    const key = prompt('Enter your Google Gemini API Key (from aistudio.google.com):', current);
+    if (key !== null) {
+      localStorage.setItem('mmm_gemini_key', key.trim());
+      alert('API Key Saved! Now MMM Nexus AI is active.');
+    }
+  }
 
-  <script>
-    function setApiKey() {
-      const current = localStorage.getItem('mmm_gemini_key') || '';
-      const key = prompt('Enter your Google Gemini API Key (from aistudio.google.com):', current);
-      if (key !== null) {
-        localStorage.setItem('mmm_gemini_key', key.trim());
-        alert('API Key Saved! Now MMM Nexus AI can answer anything.');
+  async function sendMessage() {
+    const input = document.getElementById('userInput');
+    const log = document.getElementById('chatLog');
+    const text = input.value.trim();
+    if (!text) return;
+
+    log.innerHTML += `<div class="msg-user">${text}</div>`;
+    input.value = '';
+    log.scrollTop = log.scrollHeight;
+
+    const apiKey = (localStorage.getItem('mmm_gemini_key') || '').trim();
+    if (!apiKey) {
+      let reply = "నేను MMM Nexus AI! నన్ను ఏదైనా అడగండి! (Full AI కోసం పైన 🔑 API Key సెట్ చేయండి)";
+      const q = text.toLowerCase();
+      if (q.includes('founder') || q.includes('who')) {
+        reply = "MMM Nexus ఫౌండర్ Murali Mohan.";
+      } else if (q.includes('vision')) {
+        reply = "MMM Nexus లక్ష్యం: AI, క్రియేటర్స్ మరియు నెక్స్ట్-జెన్ వెబ్ అప్లికేషన్లను అనుసంధానించడం.";
       }
+      setTimeout(() => {
+        log.innerHTML += `<div class="msg-ai">${reply}</div>`;
+        log.scrollTop = log.scrollHeight;
+      }, 300);
+      return;
     }
 
-    async function sendMessage() {
-      const input = document.getElementById('userInput');
-      const log = document.getElementById('chatLog');
-      const text = input.value.trim();
-      if (!text) return;
+    const loadId = 'load-' + Date.now();
+    log.innerHTML += `<div class="msg-ai" id="${loadId}">ఆలోచిస్తున్నాను...</div>`;
+    log.scrollTop = log.scrollHeight;
 
-      log.innerHTML += `<div class="msg-user">${text}</div>`;
-      input.value = '';
-      log.scrollTop = log.scrollHeight;
+    try {
+      const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey
+        },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: text }] }]
+        })
+      });
 
-      const apiKey = localStorage.getItem('mmm_gemini_key');
-      if (!apiKey) {
-        let reply = "నేను MMM Nexus AI! Murali Mohan స్థాపించిన ఈ డిజిటల్ ఎకోసిస్టమ్ గురించి లేదా టెక్నాలజీ గురించి అడగండి. అన్ని ప్రశ్నలకు AI ఆన్సర్స్ కావాలంటే పైన '⚙️ API Key' నొక్కి మీ Gemini Key ఇవ్వండి.";
-        const q = text.toLowerCase();
-        if (q.includes('founder') || q.includes('who') || q.includes('murali')) {
-          reply = "MMM Nexus ఫౌండర్ Murali Mohan. AI మరియు వెబ్ టెక్నాలజీతో భవిష్యత్ డిజిటల్ ప్రొడక్ట్స్ నిర్మిస్తున్నారు.";
-        } else if (q.includes('vision') || q.includes('about')) {
-          reply = "MMM Nexus లక్ష్యం: AI, క్రియేటర్స్ మరియు నెక్స్ట్-జెన్ వెబ్ అప్లికేషన్లను ఒకే వేదికపైకి తీసుకురావడం.";
-        }
-        setTimeout(() => {
-          log.innerHTML += `<div class="msg-ai">${reply}</div>`;
-          log.scrollTop = log.scrollHeight;
-        }, 300);
-        return;
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.error?.message || 'API Error');
       }
 
-      const loadId = 'load-' + Date.now();
-      log.innerHTML += `<div class="msg-ai" id="${loadId}">Thinking...</div>`;
-      log.scrollTop = log.scrollHeight;
-
-      try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: "You are MMM Nexus AI, created by founder Murali Mohan. Answer concisely and helpfully in the same language the user asks (Telugu or English): " + text }] }]
-          })
-        });
-        const data = await res.json();
-        const aiText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "క్షమించండి, API Key చెక్ చేయండి లేదా మళ్లీ ప్రయత్నించండి.";
-        document.getElementById(loadId).innerText = aiText;
-      } catch (e) {
-        document.getElementById(loadId).innerText = "నెట్‌వర్క్ ఎర్రర్ వచ్చింది. మళ్లీ ప్రయత్నించండి.";
-      }
-      log.scrollTop = log.scrollHeight;
+      const aiText = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'సమాధానం రాలేదు.';
+      document.getElementById(loadId).innerText = aiText;
+    } catch (e) {
+      document.getElementById(loadId).innerText = 'Error: ' + e.message;
     }
-  </script>
-</body>
-          </html>
+    log.scrollTop = log.scrollHeight;
+  }
+</script>
