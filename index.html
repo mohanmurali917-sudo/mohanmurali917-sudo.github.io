@@ -279,9 +279,9 @@
       log.scrollTop = log.scrollHeight;
 
       try {
-        let data = await callGemini('gemini-2.5-flash', apiKey, text);
+        let data = await callGemini('gemini-3.5-flash', apiKey, text);
         if (data?.error) {
-          data = await callGemini('gemini-2.5-flash-lite', apiKey, text);
+          data = await callGemini('gemini-3.5-flash-lite', apiKey, text);
         }
         const aiText = data?.candidates?.[0]?.content?.parts?.[0]?.text || ("Error: " + (data?.error?.message || "Try again."));
         document.getElementById(loadId).innerText = aiText;
