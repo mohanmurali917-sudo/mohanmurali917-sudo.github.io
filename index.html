@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>MMM Nexus | AI</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+    body { background: #09090b; color: #f4f4f5; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+    .top { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: #111114; border-bottom: 1px solid #27272a; }
+    .top h1 { font-size: 1.1rem; color: #fbbf24; }
+    .btn { background: #18181b; color: #fbbf24; border: 1px solid #3f3f46; padding: 7px 12px; border-radius: 14px; font-weight: 700; cursor: pointer; }
+    .chat { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+    .msg { max-width: 85%; padding: 11px 14px; border-radius: 15px; font-size: 0.95rem; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; }
+    .ai { align-self: flex-start; background: #141417; border-left: 3px solid #f59e0b; }
+    .user { align-self: flex-end; background: #f59e0b; color: #000; font-weight: 700; }
+    .msg img { max-width: 100%; border-radius: 10px; margin-bottom: 6px; display: block; }
+    .dl { display: inline-block; margin-top: 6px; background: #27272a; color: #fbbf24; padding: 4px 10px; border-radius: 8px; text-decoration: none; font-size: 0.8rem; }
+    .prev { display: none; padding: 8px 14px; background: #18181b; align-items: center; gap: 10px; font-size: 0.82rem; color: #fbbf24; }
+    .prev img { width: 40px; height: 40px; object-fit: cover; border-radius: 6px; }
+    .bar { display: flex; gap: 7px; padding: 10px; background: #111114; border-top: 1px solid #27272a; align-items: center; }
+    .bar input[type="text"] { flex: 1; min-width: 0; background: #18181b; border: 1px solid #3f3f46; color: #fff; padding: 10px 14px; border-radius: 20px; font-size: 0.95rem; outline: none; }
+    .send { background: #f59e0b; color: #000; border: none; padding: 10px 16px; border-radius: 20px; font-weight: 800; cursor: pointer; }
+    .sheet { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); align-items: flex-end; z-index: 50; }
+    .sheet-box { width: 100%; background: #141417; border-top: 1px solid #f59e0b; border-radius: 20px 20px 0 0; padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .opt { background: #1f1f23; border: 1px solid #3f3f46; color: #fbbf24; padding: 14px; border-radius: 14px; font-weight: 700; text-align: center; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <h1>✨ MMM NEXUS</h1>
+    <button class="btn" id="newBtn">+ New Chat</button>
+  </div>
+
+  <div class="chat" id="chat"></div>
+
+  <div class="prev" id="prev">
+    <img id="pImg" src="" />
+    <span style="flex:1">Photo ready</span>
+    <button class="btn" id="clrImg">✕</button>
+  </div>
+
+  <div class="bar">
+    <input type="file" id="fileIn" accept="image/*" style="display:none" />
+    <button class="btn" id="plusBtn" style="border-radius:50%;width:40px;height:40px;padding:0;font-size:1.3rem;">+</button>
+    <input type="text" id="inp" placeholder="Ask anything or create image..." />
+    <button class="send" id="sendBtn">Send</button>
+  </div>
+
+  <div class="sheet" id="sheet">
+    <div class="sheet-box">
+      <div class="opt" id="optPhoto">📷 Upload Photo</div>
+      <div class="opt" id="optImg">🎨 Create AI Image</div>
+      <div class="opt" id="optStudy">🎓 Study Helper</div>
+      <div class="opt" id="optClose">✕ Close</div>
+    </div>
+  </div>
+
+  <script>
+    const API = "https://mmm-nexus-backend.onrender.com";
+    const chat = document.getElementById("chat");
+    const inp = document.getElementById("inp");
+    const sendBtn = document.getElementById("sendBtn");
+    const sheet = document.getElementById("sheet");
+    let imgBase64 = null, imgMime = "image/jpeg", imgUrlPreview = null, studyMode = false;
+
+    function addMsg(text, type, imgSrc, canSave) {
+      const d = document.createElement("div");
+      d.className = "msg " + type;
+      if (imgSrc) {
+        const im = document.createElement("img");
+        im.src = imgSrc;
+        d.appendChild(im);
+      }
+      const sp = document.createElement("span");
+      sp.textContent = text;
+      d.appendChild(sp);
+      if (canSave && imgSrc) {
+        const a = document.createElement("a");
+        a.href = imgSrc;
+        a.download = "MMM_Nexus.jpg";
+        a.className = "dl";
+        a.textContent = "⬇️ Save Image";
+        d.appendChild(a);
+      }
+      chat.appendChild(d);
+      chat.scrollTop = chat.scrollHeight;
+      return { d, sp };
+    }
+
+    function resetChat() {
+      chat.innerHTML = "";
+      addMsg("నమస్తే మురళి! నేను MMM Nexus AI. నన్ను ఏదైనా అడగండి లేదా + నొక్కి ఫోటో / AI ఇమేజ్ క్రియేట్ చేయండి! 🚀", "ai");
+    }
+
+    document.getElementById("newBtn").onclick = resetChat;
+    document.getElementById("plusBtn").onclick = () => sheet.style.display = "flex";
+    document.getElementById("optClose").onclick = () => sheet.style.display = "none";
+    sheet.onclick = (e) => { if (e.target === sheet) sheet.style.display = "none"; };
+
+    document.getElementById("optPhoto").onclick = () => {
+      sheet.style.display = "none";
+      document.getElementById("fileIn").click();
+    };
+
+    document.getElementById("optStudy").onclick = () => {
+      sheet.style.display = "none";
+      studyMode = !studyMode;
+      inp.placeholder = studyMode ? "🎓 Study Mode: Ask your question..." : "Ask anything or create image...";
+    };
+
+    document.getElementById("fileIn").onchange = (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      imgMime = f.type || "image/jpeg";
+      const r = new FileReader();
+      r.onload = (ev) => {
+        imgUrlPreview = ev.target.result;
+        imgBase64 = imgUrlPreview.split(",")[1];
+        document.getElementById("pImg").src = imgUrlPreview;
+        document.getElementById("prev").style.display = "flex";
+      };
+      r.readAsDataURL(f);
+    };
+
+    document.getElementById("clrImg").onclick = () => {
+      imgBase64 = null; imgUrlPreview = null;
+      document.getElementById("fileIn").value = "";
+      document.getElementById("prev").style.display = "none";
+    };
+
+    async function makeImage(customPrompt) {
+      const p = customPrompt || inp.value.trim() || prompt("🎨 ఏ ఇమేజ్ కావాలి? (ఉదా: A royal lion at sunset):");
+      if (!p) return;
+      inp.value = "";
+      sendBtn.disabled = true;
+      addMsg("🎨 Create image: " + p, "user");
+      const box = addMsg("🎨 Generating image (~20s)...", "ai");
+      try {
+        const res = await fetch(API + "/generate-image", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: p })
+        });
+        const data = await res.json();
+        box.d.remove();
+        if (data.image) addMsg("✨ " + p, "ai", data.image, true);
+        else addMsg("⚠️ " + (data.error || "Failed to generate image."), "ai");
+      } catch (err) {
+        box.sp.textContent = "⚠️ Server error. Try again in 10s.";
+      }
+      sendBtn.disabled = false;
+    }
+
+    document.getElementById("optImg").onclick = () => {
+      sheet.style.display = "none";
+      makeImage();
+    };
+
+    async function send() {
+      const txt = inp.value.trim();
+      if (!txt && !imgBase64) return;
+      const low = txt.toLowerCase();
+      if (!imgBase64 && (low.startsWith("create image") || low.startsWith("create an image") || low.startsWith("generate image") || low.startsWith("draw "))) {
+        return makeImage(txt);
+      }
+      const msgText = txt || "Analyze this photo";
+      addMsg(msgText, "user", imgUrlPreview);
+      const sendImg = imgBase64;
+      const sendMime = imgMime;
+      inp.value = "";
+      document.getElementById("clrImg").click();
+      sendBtn.disabled = true;
+
+      const box = addMsg("Thinking...", "ai");
+      try {
+        const res = await fetch(API + "/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: (studyMode ? "[Explain clearly for a student] " : "") + msgText, image: sendImg, mimeType: sendMime })
+        });
+        const data = await res.json();
+        box.sp.textContent = data.reply || ("⚠️ " + (data.error || "No reply"));
+      } catch (err) {
+        box.sp.textContent = "⚠️ Server waking up. Wait 15s and tap Send again.";
+      }
+      sendBtn.disabled = false;
+    }
+
+    sendBtn.onclick = send;
+    inp.onkeypress = (e) => { if (e.key === "Enter") send(); };
+    resetChat();
+  </script>
+</body>
+</html>
