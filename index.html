@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#09090b" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="MMM Nexus" />
   <title>MMM Nexus | AI Ecosystem</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2309090b'/><text x='50' y='66' font-size='52' text-anchor='middle' fill='%23fbbf24' font-family='sans-serif' font-weight='bold'>M</text></svg>" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
     body {
@@ -18,35 +22,36 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 18px;
+      padding: 12px 16px;
       background: #111114;
       border-bottom: 1px solid #27272a;
       flex-shrink: 0;
     }
     .brand { display: flex; flex-direction: column; }
     .brand h1 {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 800;
       letter-spacing: 1px;
       background: linear-gradient(90deg, #f59e0b, #fbbf24, #fde68a);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .brand span { font-size: 0.72rem; color: #a1a1aa; margin-top: 2px; }
-    .founder-btn {
+    .brand span { font-size: 0.7rem; color: #a1a1aa; margin-top: 2px; }
+    .top-actions { display: flex; gap: 8px; }
+    .top-btn {
       background: #18181b;
       color: #fbbf24;
       border: 1px solid #3f3f46;
-      padding: 7px 14px;
-      border-radius: 20px;
-      font-size: 0.82rem;
+      padding: 6px 12px;
+      border-radius: 18px;
+      font-size: 0.78rem;
       font-weight: 600;
       cursor: pointer;
     }
     .chat-box {
       flex: 1;
       overflow-y: auto;
-      padding: 18px 16px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 14px;
@@ -54,9 +59,9 @@
     }
     .msg {
       max-width: 85%;
-      padding: 12px 16px;
+      padding: 12px 15px;
       border-radius: 16px;
-      font-size: 0.96rem;
+      font-size: 0.95rem;
       line-height: 1.55;
       white-space: pre-wrap;
       word-wrap: break-word;
@@ -90,7 +95,7 @@
     .input-bar {
       display: flex;
       gap: 8px;
-      padding: 12px 14px;
+      padding: 10px 12px;
       background: #111114;
       border-top: 1px solid #27272a;
       flex-shrink: 0;
@@ -103,7 +108,7 @@
       color: #ffffff;
       padding: 12px 14px;
       border-radius: 25px;
-      font-size: 0.96rem;
+      font-size: 0.95rem;
       outline: none;
     }
     .input-bar input:focus { border-color: #f59e0b; }
@@ -111,10 +116,10 @@
       background: #18181b;
       color: #fbbf24;
       border: 1px solid #3f3f46;
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       cursor: pointer;
       flex-shrink: 0;
     }
@@ -128,10 +133,10 @@
       color: #000000 !important;
       border: none;
       padding: 0 18px;
-      height: 44px;
+      height: 42px;
       border-radius: 25px;
       font-weight: 800;
-      font-size: 0.95rem;
+      font-size: 0.94rem;
       cursor: pointer;
       flex-shrink: 0;
     }
@@ -140,7 +145,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.82);
       justify-content: center;
       align-items: center;
       padding: 20px;
@@ -157,7 +162,18 @@
     }
     .modal-card h2 { color: #fbbf24; margin-bottom: 10px; font-size: 1.2rem; }
     .modal-card p { color: #d4d4d8; font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px; }
-    .modal-card button {
+    .social-links { display: flex; justify-content: center; gap: 10px; margin-bottom: 16px; }
+    .social-links a {
+      text-decoration: none;
+      background: #18181b;
+      color: #fbbf24;
+      border: 1px solid #3f3f46;
+      padding: 7px 14px;
+      border-radius: 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .close-btn {
       background: #f59e0b;
       color: #000000;
       border: none;
@@ -175,7 +191,10 @@
       <h1>✨ MMM NEXUS</h1>
       <span>AI Ecosystem • By Murali Mohan</span>
     </div>
-    <button class="founder-btn" onclick="toggleModal(true)">ℹ️ Founder</button>
+    <div class="top-actions">
+      <button class="top-btn" onclick="clearChat()">🗑️ New</button>
+      <button class="top-btn" onclick="toggleModal(true)">👑 Founder</button>
+    </div>
   </div>
 
   <div class="chat-box" id="chatBox">
@@ -192,7 +211,11 @@
     <div class="modal-card">
       <h2>👑 Murali Mohan</h2>
       <p>Founder & Creator of <strong>MMM Nexus</strong> — an AI-powered digital ecosystem built from scratch to make smart technology accessible to everyone.</p>
-      <button onclick="toggleModal(false)">Close</button>
+      <div class="social-links">
+        <a href="https://youtube.com/@muralimohan2723" target="_blank">▶ YouTube</a>
+        <a href="https://instagram.com/murali_mmm_999" target="_blank">📸 Instagram</a>
+      </div>
+      <button class="close-btn" onclick="toggleModal(false)">Close</button>
     </div>
   </div>
 
@@ -202,9 +225,15 @@
     const userInput = document.getElementById("userInput");
     const sendBtn = document.getElementById("sendBtn");
     const micBtn = document.getElementById("micBtn");
+    let chatHistory = [];
 
     function toggleModal(show) {
       document.getElementById("founderModal").style.display = show ? "flex" : "none";
+    }
+
+    function clearChat() {
+      chatHistory = [];
+      chatBox.innerHTML = `<div class="msg ai-msg">నమస్తే! కొత్త చాట్ మొదలైంది. నన్ను ఏదైనా అడగండి! 🚀<button class="copy-btn" onclick="copyText(this)">📋 Copy</button></div>`;
     }
 
     function copyText(btn) {
@@ -254,6 +283,10 @@
       userInput.value = "";
       sendBtn.disabled = true;
 
+      const contextPrompt = chatHistory.length > 0
+        ? "Previous conversation:\n" + chatHistory.slice(-6).join("\n") + "\n\nCurrent User message: " + text
+        : text;
+
       const loading = addMsg("Thinking...", "ai-msg", true);
       const wakeTimer = setTimeout(() => {
         loading.firstChild.textContent = "Server waking up (first message takes ~25s)... ⏳";
@@ -263,12 +296,14 @@
         const res = await fetch(BACKEND_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text })
+          body: JSON.stringify({ message: contextPrompt })
         });
         clearTimeout(wakeTimer);
         const data = await res.json();
         if (data.reply) {
           loading.firstChild.textContent = data.reply;
+          chatHistory.push("User: " + text);
+          chatHistory.push("AI: " + data.reply);
         } else {
           loading.firstChild.textContent = "⚠️ " + (data.error || "Something went wrong. Please try again.");
         }
@@ -282,4 +317,4 @@
     }
   </script>
 </body>
-        </html>
+  </html>
