@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#09090b" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>MMM Nexus | AI</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+    body { background: #09090b; color: #f4f4f5; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+    .top { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: #111114; border-bottom: 1px solid #27272a; }
+    .top-left { display: flex; align-items: center; gap: 8px; }
+    .top h1 { font-size: 1.05rem; color: #fbbf24; }
+    .top-right { display: flex; gap: 6px; }
+    .btn { background: #18181b; color: #fbbf24; border: 1px solid #3f3f46; padding: 6px 11px; border-radius: 14px; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+    .chat { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+    .msg { max-width: 86%; padding: 11px 14px; border-radius: 15px; font-size: 0.94rem; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; }
+    .ai { align-self: flex-start; background: #141417; border-left: 3px solid #f59e0b; }
+    .user { align-self: flex-end; background: #f59e0b; color: #000; font-weight: 700; }
+    .msg img { max-width: 100%; border-radius: 10px; margin-bottom: 6px; display: block; }
+    .act-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .chip { background: #27272a; color: #fbbf24; border: 1px solid #3f3f46; padding: 4px 10px; border-radius: 8px; text-decoration: none; font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+    .prev { display: none; padding: 8px 14px; background: #18181b; align-items: center; gap: 10px; font-size: 0.82rem; color: #fbbf24; border-top: 1px solid #27272a; }
+    .prev img { width: 38px; height: 38px; object-fit: cover; border-radius: 6px; }
+    .bar { display: flex; gap: 6px; padding: 9px; background: #111114; border-top: 1px solid #27272a; align-items: center; }
+    .bar input[type="text"] { flex: 1; min-width: 0; background: #18181b; border: 1px solid #3f3f46; color: #fff; padding: 10px 12px; border-radius: 20px; font-size: 0.93rem; outline: none; }
+    .ico { width: 38px; height: 38px; border-radius: 50%; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .ico.rec { background: #dc2626; color: #fff; border-color: #ef4444; }
+    .send { background: #f59e0b; color: #000; border: none; padding: 10px 14px; border-radius: 20px; font-weight: 800; cursor: pointer; }
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: flex-end; z-index: 50; }
+    .modal.center { align-items: center; justify-content: center; padding: 14px; }
+    .sheet-box { width: 100%; background: #141417; border-top: 1px solid #f59e0b; border-radius: 20px 20px 0 0; padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .opt { background: #1f1f23; border: 1px solid #3f3f46; color: #fbbf24; padding: 13px 10px; border-radius: 14px; font-weight: 700; font-size: 0.88rem; text-align: center; cursor: pointer; }
+    .card { width: 100%; max-width: 420px; background: #141417; border: 1px solid #f59e0b; border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .card h3 { color: #fbbf24; font-size: 1rem; }
+    .card input, .card select { background: #18181b; border: 1px solid #3f3f46; color: #fff; padding: 10px; border-radius: 12px; font-size: 0.9rem; outline: none; }
+    .side-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 60; }
+    .side { width: 265px; max-width: 80vw; height: 100%; background: #111114; border-right: 1px solid #27272a; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .side-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #27272a; color: #fbbf24; font-weight: 800; }
+    .h-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+    .h-item { display: flex; justify-content: space-between; align-items: center; background: #18181b; border: 1px solid #27272a; padding: 10px; border-radius: 10px; font-size: 0.85rem; cursor: pointer; }
+    .h-item.act { border-color: #f59e0b; }
+    .h-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 175px; }
+    .h-del { background: none; border: none; color: #ef4444; cursor: pointer; }
+    .run-box { width: 100%; height: 85vh; background: #fff; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; border: 2px solid #f59e0b; }
+    .run-top { background: #111114; color: #fbbf24; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
+    .run-box iframe { flex: 1; width: 100%; border: none; background: #fff; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="top-left">
+      <button class="btn" id="menuBtn">☰</button>
+      <h1>✨ MMM NEXUS</h1>
+    </div>
+    <div class="top-right">
+      <button class="btn" id="instBtn">📲 App</button>
+      <button class="btn" id="newBtn">+ New</button>
+    </div>
+  </div>
+
+  <div class="side-bg" id="sideBg">
+    <div class="side">
+      <div class="side-top"><span>💬 Chat History</span><button class="btn" id="closeSide">✕</button></div>
+      <div class="h-list" id="hList"></div>
+    </div>
+  </div>
+
+  <div class="chat" id="chat"></div>
+
+  <div class="prev" id="prev">
+    <img id="pImg" src="" />
+    <span id="pTxt" style="flex:1">Attachment ready</span>
+    <button class="btn" id="clrAtt">✕</button>
+  </div>
+
+  <div class="bar">
+    <input type="file" id="fileIn" accept="image/*" style="display:none" />
+    <input type="file" id="docIn" accept=".pdf,.txt,.md,.csv,.html,.js,.py" style="display:none" />
+    <button class="btn ico" id="plusBtn">+</button>
+    <input type="text" id="inp" placeholder="Ask, speak, or create image..." />
+    <button class="btn ico" id="micBtn">🎤</button>
+    <button class="send" id="sendBtn">Send</button>
+  </div>
+
+  <div class="modal" id="sheet">
+    <div class="sheet-box">
+      <div class="opt" id="optPhoto">📷 Upload Photo</div>
+      <div class="opt" id="optImg">🎨 AI Image Studio</div>
+      <div class="opt" id="optDoc">📄 PDF / Notes</div>
+      <div class="opt" id="optStudy">🎓 Study Helper</div>
+      <div class="opt" id="optCode">💻 Test Live Code</div>
+      <div class="opt" id="optClose">✕ Close</div>
+    </div>
+  </div>
+
+  <div class="modal center" id="imgModal">
+    <div class="card">
+      <h3>🎨 AI Image Studio</h3>
+      <input type="text" id="imPrompt" placeholder="Describe image (e.g. Royal lion at sunset)" />
+      <select id="imSize">
+        <option value="1024x1024">Square (1:1) - Post / DP</option>
+        <option value="1280x720">YouTube Thumbnail (16:9)</option>
+        <option value="720x1280">WhatsApp Status / Reel (9:16)</option>
+      </select>
+      <select id="imStyle">
+        <option value="">Default HD Style</option>
+        <option value=", ultra realistic 8k photography, cinematic lighting">Realistic Photo</option>
+        <option value=", 3D Pixar Disney animation style, vibrant colors">3D Cartoon</option>
+        <option value=", anime digital illustration, detailed art">Anime Art</option>
+        <option value=", Telugu cinema mass movie poster style, dramatic lighting">Cinema Poster</option>
+      </select>
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button class="btn" id="imCancel">Cancel</button>
+        <button class="send" id="imGo">Generate</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal center" id="runModal">
+    <div class="run-box">
+      <div class="run-top"><span>💻 Live Code Preview</span><button class="btn" id="runClose">✕ Close</button></div>
+      <iframe id="runFrame"></iframe>
+    </div>
+  </div>
+
+  <script>
+    // Dynamic PWA Manifest & Icon
+    const svgIcon = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="40" fill="#09090b"/><text x="50%" y="56%" font-size="95" text-anchor="middle" fill="#fbbf24" font-family="sans-serif" font-weight="bold">M</text></svg>');
+    const man = { name: "MMM Nexus AI", short_name: "MMM Nexus", start_url: location.href, display: "standalone", background_color: "#09090b", theme_color: "#09090b", icons: [{ src: svgIcon, sizes: "192x192", type: "image/svg+xml" }] };
+    const link = document.createElement("link"); link.rel = "manifest"; link.href = URL.createObjectURL(new Blob([JSON.stringify(man)], { type: "application/json" }));
+    document.head.appendChild(link);
+
+    let deferredPrompt = null;
+    window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferredPrompt = e; });
+    document.getElementById("instBtn").onclick = async () => {
+      if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; }
+      else alert("📲 Chrome పైన కుడివైపు (⋮) నొక్కి → 'Add to Home screen' లేదా 'Install app' నొక్కండి — MMM Nexus మీ ఫోన్‌లో యాప్ లాగా ఇన్‌స్టాల్ అవుతుంది!");
+    };
+
+    const API = "https://mmm-nexus-backend.onrender.com";
+    const chat = document.getElementById("chat");
+    const inp = document.getElementById("inp");
+    const sendBtn = document.getElementById("sendBtn");
+    const sheet = document.getElementById("sheet");
+    const sideBg = document.getElementById("sideBg");
+    const imgModal = document.getElementById("imgModal");
+    const runModal = document.getElementById("runModal");
+
+    let imgBase64 = null, imgMime = "image/jpeg", imgUrlPreview = null, docContext = null, studyMode = false;
+    let sessions = [];
+    try { const s = JSON.parse(localStorage.getItem("mmm_hist_v3") || "[]"); if (Array.isArray(s)) sessions = s; } catch (e) {}
+    let curId = null;
+
+    function saveHist() {
+      try { localStorage.setItem("mmm_hist_v3", JSON.stringify(sessions)); }
+      catch (e) { sessions = sessions.slice(0, 5); try { localStorage.setItem("mmm_hist_v3", JSON.stringify(sessions)); } catch (err) {} }
+      renderHist();
+    }
+
+    function renderHist() {
+      const list = document.getElementById("hList"); list.innerHTML = "";
+      sessions.forEach(s => {
+        const row = document.createElement("div"); row.className = "h-item" + (s.id === curId ? " act" : "");
+        const sp = document.createElement("span"); sp.className = "h-title"; sp.textContent = s.title;
+        const del = document.createElement("button"); del.className = "h-del"; del.textContent = "🗑️";
+        del.onclick = (e) => { e.stopPropagation(); sessions = sessions.filter(x => x.id !== s.id); if (!sessions.length) newChat(); else { if (curId === s.id) curId = sessions[0].id; saveHist(); loadChat(); } };
+        row.append(sp, del);
+        row.onclick = () => { curId = s.id; saveHist(); loadChat(); sideBg.style.display = "none"; };
+        list.appendChild(row);
+      });
+    }
+
+    function speakText(text) {
+      if (!("speechSynthesis" in window)) return alert("Voice playback not supported on this browser.");
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text.replace(/```[\s\S]*?```/g, "Code block."));
+      u.lang = /[\u0C00-\u0C7F]/.test(text) ? "te-IN" : "en-IN";
+      window.speechSynthesis.speak(u);
+    }
+
+    function extractCode(text) {
+      const m = text.match(/```(?:html|xml)?\s*([\s\S]*?)```/i);
+      if (m && (m[1].includes("<") || m[1].includes("html"))) return m[1];
+      if (text.includes("<!DOCTYPE html") || text.includes("<html")) return text;
+      return null;
+    }
+
+    function openPreview(code) {
+      document.getElementById("runFrame").srcdoc = code;
+      runModal.style.display = "flex";
+    }
+
+    function attachActions(d, text, imgSrc, canSave) {
+      const row = document.createElement("div"); row.className = "act-row";
+      if (canSave && imgSrc) {
+        const a = document.createElement("a"); a.href = imgSrc; a.target = "_blank"; a.download = "MMM_Nexus.jpg";
+        a.className = "chip"; a.textContent = "⬇️ Save HD"; row.appendChild(a);
+      } else if (text && text.length > 2) {
+        const spk = document.createElement("button"); spk.className = "chip"; spk.textContent = "🔊 Listen";
+        spk.onclick = () => speakText(text); row.appendChild(spk);
+        const code = extractCode(text);
+        if (code) {
+          const run = document.createElement("button"); run.className = "chip"; run.textContent = "▶️ Run Code";
+          run.onclick = () => openPreview(code); row.appendChild(run);
+        }
+      }
+      if (row.children.length) d.appendChild(row);
+    }
+
+    function addMsg(text, type, imgSrc, canSave) {
+      const d = document.createElement("div"); d.className = "msg " + type;
+      if (imgSrc) { const im = document.createElement("img"); im.src = imgSrc; d.appendChild(im); }
+      const sp = document.createElement("span"); sp.textContent = text; d.appendChild(sp);
+      if (type === "ai") attachActions(d, text, imgSrc, canSave);
+      chat.appendChild(d); chat.scrollTop = chat.scrollHeight;
+      return { d, sp };
+    }
+
+    function newChat() {
+      const id = Date.now().toString();
+      sessions.unshift({ id, title: "New Chat", msgs: [{ t: "నమస్తే మురళి! MMM Nexus Pro Ready 🚀\n🎤 Voice, 🎨 Image Studio, 📄 PDF Reader, 💻 Live Code & 📲 App Install అన్నీ యాక్టివ్‌లో ఉన్నాయి!", y: "ai" }] });
+      curId = id; saveHist(); loadChat();
+    }
+
+    function loadChat() {
+      const s = sessions.find(x => x.id === curId) || sessions[0];
+      if (!s) return newChat();
+      curId = s.id; chat.innerHTML = "";
+      s.msgs.forEach(m => addMsg(m.t, m.y, m.img, m.save));
+    }
+
+    function pushMsg(t, y, img, save) {
+      const s = sessions.find(x => x.id === curId); if (!s) return;
+      if (y === "user" && s.title === "New Chat") s.title = t.slice(0, 24);
+      s.msgs.push({ t, y, img, save }); saveHist();
+    }
+
+    // Voice Recognition (Mic)
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const micBtn = document.getElementById("micBtn");
+    if (SpeechRec) {
+      const rec = new SpeechRec(); rec.lang = "en-IN"; rec.interimResults = false;
+      rec.onstart = () => micBtn.classList.add("rec");
+      rec.onend = () => micBtn.classList.remove("rec");
+      rec.onresult = (e) => { inp.value = (inp.value + " " + e.results[0][0].transcript).trim(); };
+      micBtn.onclick = () => { try { rec.start(); } catch (e) {} };
+    } else {
+      micBtn.onclick = () => alert("Voice input works best in Chrome browser.");
+    }
+
+    document.getElementById("newBtn").onclick = newChat;
+    document.getElementById("menuBtn").onclick = () => { renderHist(); sideBg.style.display = "block"; };
+    document.getElementById("closeSide").onclick = () => sideBg.style.display = "none";
+    sideBg.onclick = (e) => { if (e.target === sideBg) sideBg.style.display = "none"; };
+    document.getElementById("plusBtn").onclick = () => sheet.style.display = "flex";
+    document.getElementById("optClose").onclick = () => sheet.style.display = "none";
+    sheet.onclick = (e) => { if (e.target === sheet) sheet.style.display = "none"; };
+    document.getElementById("runClose").onclick = () => { runModal.style.display = "none"; document.getElementById("runFrame").srcdoc = ""; };
+
+    document.getElementById("optPhoto").onclick = () => { sheet.style.display = "none"; document.getElementById("fileIn").click(); };
+    document.getElementById("optDoc").onclick = () => { sheet.style.display = "none"; document.getElementById("docIn").click(); };
+    document.getElementById("optImg").onclick = () => { sheet.style.display = "none"; imgModal.style.display = "flex"; };
+    document.getElementById("imCancel").onclick = () => imgModal.style.display = "none";
+    document.getElementById("optCode").onclick = () => {
+      sheet.style.display = "none";
+      const c = prompt("HTML కోడ్ పేస్ట్ చేసి వెంటనే Run చెయ్యండి:");
+      if (c) openPreview(c);
+    };
+    document.getElementById("optStudy").onclick = () => {
+      sheet.style.display = "none"; studyMode = !studyMode;
+      inp.placeholder = studyMode ? "🎓 Study Mode ON: Ask question..." : "Ask, speak, or create image...";
+    };
+
+    document.getElementById("clrAtt").onclick = () => {
+      imgBase64 = null; imgUrlPreview = null; docContext = null;
+      document.getElementById("fileIn").value = ""; document.getElementById("docIn").value = "";
+      document.getElementById("prev").style.display = "none";
+    };
+
+    document.getElementById("fileIn").onchange = (e) => {
+      const f = e.target.files[0]; if (!f) return;
+      imgMime = f.type || "image/jpeg";
+      const r = new FileReader();
+      r.onload = (ev) => {
+        imgUrlPreview = ev.target.result; imgBase64 = imgUrlPreview.split(",")[1];
+        document.getElementById("pImg").src = imgUrlPreview; document.getElementById("pImg").style.display = "block";
+        document.getElementById("pTxt").textContent = "Photo ready";
+        document.getElementById("prev").style.display = "flex";
+      };
+      r.readAsDataURL(f);
+    };
+
+    document.getElementById("docIn").onchange = async (e) => {
+      const f = e.target.files[0]; if (!f) return;
+      document.getElementById("pImg").style.display = "none";
+      document.getElementById("pTxt").textContent = "📄 Reading " + f.name + "...";
+      document.getElementById("prev").style.display = "flex";
+      try {
+        if (f.name.toLowerCase().endsWith(".pdf") && window.pdfjsLib) {
+          pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+          const pdf = await pdfjsLib.getDocument({ data: await f.arrayBuffer() }).promise;
+          let full = "";
+          for (let i = 1; i <= Math.min(pdf.numPages, 15); i++) {
+            const pg = await pdf.getPage(i);
+            const tc = await pg.getTextContent();
+            full += tc.items.map(x => x.str).join(" ") + "\n";
+          }
+          docContext = full.slice(0, 14000);
+        } else {
+          docContext = (await f.text()).slice(0, 14000);
+        }
+        document.getElementById("pTxt").textContent = "📄 " + f.name + " ready! Ask summary or questions";
+      } catch (err) {
+        document.getElementById("pTxt").textContent = "⚠️ Could not read file";
+      }
+    };
+
+    function makeImage(promptTxt, size = "1024x1024", style = "") {
+      const [w, h] = size.split("x");
+      const finalPrompt = promptTxt + style;
+      addMsg("🎨 Create image: " + promptTxt, "user");
+      pushMsg("🎨 Create image: " + promptTxt, "user");
+      const box = addMsg("🎨 Creating HD image (~5s)...", "ai");
+      const seed = Math.floor(Math.random() * 999999);
+      const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?width=${w}&height=${h}&nologo=true&seed=${seed}`;
+      const tester = new Image();
+      tester.onload = () => {
+        box.d.remove();
+        addMsg("✨ " + promptTxt, "ai", imgUrl, true);
+        pushMsg("✨ " + promptTxt, "ai", imgUrl, true);
+      };
+      tester.onerror = () => { box.sp.textContent = "⚠️ Image server busy, try again in 5s."; };
+      tester.src = imgUrl;
+    }
+
+    document.getElementById("imGo").onclick = () => {
+      const p = document.getElementById("imPrompt").value.trim();
+      if (!p) return;
+      imgModal.style.display = "none";
+      document.getElementById("imPrompt").value = "";
+      makeImage(p, document.getElementById("imSize").value, document.getElementById("imStyle").value);
+    };
+
+    function isImgReq(t) {
+      const l = t.toLowerCase();
+      return l.includes("
