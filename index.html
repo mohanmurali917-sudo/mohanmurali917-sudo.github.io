@@ -22,32 +22,114 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 16px;
+      padding: 12px 14px;
       background: #111114;
       border-bottom: 1px solid #27272a;
       flex-shrink: 0;
     }
-    .brand { display: flex; flex-direction: column; }
+    .left-bar { display: flex; align-items: center; gap: 10px; }
+    .menu-btn {
+      background: #18181b;
+      color: #fbbf24;
+      border: 1px solid #3f3f46;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      font-size: 1.15rem;
+      cursor: pointer;
+    }
     .brand h1 {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 800;
-      letter-spacing: 1px;
+      letter-spacing: 0.8px;
       background: linear-gradient(90deg, #f59e0b, #fbbf24, #fde68a);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .brand span { font-size: 0.7rem; color: #a1a1aa; margin-top: 2px; }
-    .top-actions { display: flex; gap: 8px; }
+    .brand span { font-size: 0.68rem; color: #a1a1aa; display: block; }
+    .top-actions { display: flex; gap: 6px; }
     .top-btn {
       background: #18181b;
       color: #fbbf24;
       border: 1px solid #3f3f46;
-      padding: 6px 12px;
+      padding: 6px 11px;
       border-radius: 18px;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 600;
       cursor: pointer;
     }
+
+    /* History Sidebar Drawer */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 60;
+    }
+    .sidebar {
+      width: 270px;
+      max-width: 80vw;
+      height: 100%;
+      background: #111114;
+      border-right: 1px solid #27272a;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #27272a;
+      padding-bottom: 10px;
+    }
+    .sidebar-header h3 { color: #fbbf24; font-size: 1rem; }
+    .new-chat-full {
+      background: #f59e0b;
+      color: #000;
+      border: none;
+      padding: 10px;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+    }
+    .history-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #18181b;
+      border: 1px solid #27272a;
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .history-item.active { border-color: #f59e0b; }
+    .history-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
+    }
+    .del-chat {
+      background: none;
+      border: none;
+      color: #ef4444;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    /* Chat Area */
     .chat-box {
       flex: 1;
       overflow-y: auto;
@@ -58,7 +140,7 @@
       scroll-behavior: smooth;
     }
     .msg {
-      max-width: 85%;
+      max-width: 86%;
       padding: 12px 15px;
       border-radius: 16px;
       font-size: 0.95rem;
@@ -72,18 +154,22 @@
       background: #141417;
       border-left: 3px solid #f59e0b;
       color: #f4f4f5;
-      padding-bottom: 34px;
+      padding-bottom: 36px;
     }
-    .copy-btn {
+    .msg-actions {
       position: absolute;
       bottom: 6px;
       right: 10px;
+      display: flex;
+      gap: 6px;
+    }
+    .mini-btn {
       background: #27272a;
       color: #fbbf24;
       border: 1px solid #3f3f46;
       border-radius: 8px;
       padding: 2px 8px;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       cursor: pointer;
     }
     .user-msg {
@@ -92,55 +178,76 @@
       color: #000000;
       font-weight: 700;
     }
+    .chat-img {
+      max-width: 100%;
+      max-height: 220px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    /* Image Preview Bar */
+    .preview-bar {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      background: #18181b;
+      border-top: 1px solid #27272a;
+    }
+    .preview-bar img { height: 46px; width: 46px; object-fit: cover; border-radius: 8px; border: 1px solid #f59e0b; }
+    .preview-bar span { font-size: 0.8rem; color: #fbbf24; flex: 1; }
+    .preview-bar button { background: #dc2626; color: #fff; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; }
+
+    /* Bottom Input Bar */
     .input-bar {
       display: flex;
-      gap: 8px;
-      padding: 10px 12px;
+      gap: 6px;
+      padding: 10px;
       background: #111114;
       border-top: 1px solid #27272a;
       flex-shrink: 0;
       align-items: center;
     }
-    .input-bar input {
-      flex: 1;
-      background: #18181b;
-      border: 1px solid #3f3f46;
-      color: #ffffff;
-      padding: 12px 14px;
-      border-radius: 25px;
-      font-size: 0.95rem;
-      outline: none;
-    }
-    .input-bar input:focus { border-color: #f59e0b; }
-    .mic-btn {
+    .icon-btn {
       background: #18181b;
       color: #fbbf24;
       border: 1px solid #3f3f46;
-      width: 42px;
-      height: 42px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
-      font-size: 1.05rem;
+      font-size: 1rem;
       cursor: pointer;
       flex-shrink: 0;
     }
-    .mic-btn.listening {
-      background: #dc2626;
+    .icon-btn.listening { background: #dc2626; color: #fff; border-color: #ef4444; }
+    .input-bar input[type="text"] {
+      flex: 1;
+      min-width: 0;
+      background: #18181b;
+      border: 1px solid #3f3f46;
       color: #ffffff;
-      border-color: #ef4444;
+      padding: 10px 13px;
+      border-radius: 22px;
+      font-size: 0.92rem;
+      outline: none;
     }
+    .input-bar input[type="text"]:focus { border-color: #f59e0b; }
     .send-btn {
       background: #f59e0b;
       color: #000000 !important;
       border: none;
-      padding: 0 18px;
-      height: 42px;
-      border-radius: 25px;
+      padding: 0 15px;
+      height: 38px;
+      border-radius: 20px;
       font-weight: 800;
-      font-size: 0.94rem;
+      font-size: 0.88rem;
       cursor: pointer;
       flex-shrink: 0;
     }
-    .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .send-btn:disabled { opacity: 0.5; }
+
+    /* Modal */
     .modal {
       display: none;
       position: fixed;
@@ -149,7 +256,7 @@
       justify-content: center;
       align-items: center;
       padding: 20px;
-      z-index: 50;
+      z-index: 70;
     }
     .modal-card {
       background: #141417;
@@ -187,30 +294,53 @@
 <body>
 
   <div class="topbar">
-    <div class="brand">
-      <h1>✨ MMM NEXUS</h1>
-      <span>AI Ecosystem • By Murali Mohan</span>
+    <div class="left-bar">
+      <button class="menu-btn" onclick="toggleSidebar(true)" title="Chat History">☰</button>
+      <div class="brand">
+        <h1>✨ MMM NEXUS</h1>
+        <span>AI Ecosystem • Murali Mohan</span>
+      </div>
     </div>
     <div class="top-actions">
-      <button class="top-btn" onclick="clearChat()">🗑️ New</button>
-      <button class="top-btn" onclick="toggleModal(true)">👑 Founder</button>
+      <button class="top-btn" onclick="createNewChat()">+ New</button>
+      <button class="top-btn" onclick="toggleModal(true)">👑</button>
     </div>
   </div>
 
-  <div class="chat-box" id="chatBox">
-    <div class="msg ai-msg">నమస్తే! నేను MMM Nexus AI. అచ్చం మీ పర్సనల్ AI అసిస్టెంట్ లాగా నన్ను ఏదైనా అడగండి! 🚀<button class="copy-btn" onclick="copyText(this)">📋 Copy</button></div>
+  <!-- Chat History Sidebar -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="if(event.target===this) toggleSidebar(false)">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h3>💬 Chat History</h3>
+        <button class="top-btn" onclick="toggleSidebar(false)">✕</button>
+      </div>
+      <button class="new-chat-full" onclick="createNewChat(); toggleSidebar(false)">+ Start New Chat</button>
+      <div class="history-list" id="historyList"></div>
+    </div>
+  </div>
+
+  <div class="chat-box" id="chatBox"></div>
+
+  <!-- Selected Image Preview -->
+  <div class="preview-bar" id="previewBar">
+    <img id="previewImg" src="" alt="Preview" />
+    <span>Photo attached • Ask anything about it</span>
+    <button onclick="clearImage()">✕</button>
   </div>
 
   <div class="input-bar">
-    <input type="text" id="userInput" placeholder="Ask or tap mic..." onkeypress="if(event.key==='Enter') sendMessage()" />
-    <button class="mic-btn" id="micBtn" onclick="startVoice()" title="Voice Input">🎤</button>
+    <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="handleImageSelect(event)" />
+    <button class="icon-btn" onclick="document.getElementById('imageInput').click()" title="Upload Photo">📷</button>
+    <button class="icon-btn" onclick="generateAIImage()" title="Create AI Image">🎨</button>
+    <input type="text" id="userInput" placeholder="Ask, upload photo, or mic..." onkeypress="if(event.key==='Enter') sendMessage()" />
+    <button class="icon-btn" id="micBtn" onclick="startVoice()" title="Voice Input">🎤</button>
     <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
   </div>
 
   <div class="modal" id="founderModal" onclick="if(event.target===this) toggleModal(false)">
     <div class="modal-card">
       <h2>👑 Murali Mohan</h2>
-      <p>Founder & Creator of <strong>MMM Nexus</strong> — an AI-powered digital ecosystem built from scratch to make smart technology accessible to everyone.</p>
+      <p>Founder & Creator of <strong>MMM Nexus</strong> — a full-stack AI digital ecosystem built from scratch to make smart technology accessible to everyone.</p>
       <div class="social-links">
         <a href="https://youtube.com/@muralimohan2723" target="_blank">▶ YouTube</a>
         <a href="https://instagram.com/murali_mmm_999" target="_blank">📸 Instagram</a>
@@ -225,96 +355,246 @@
     const userInput = document.getElementById("userInput");
     const sendBtn = document.getElementById("sendBtn");
     const micBtn = document.getElementById("micBtn");
-    let chatHistory = [];
+
+    let sessions = JSON.parse(localStorage.getItem("mmm_nexus_sessions") || "[]");
+    let currentSessionId = null;
+    let selectedImageBase64 = null;
+    let selectedMimeType = "image/jpeg";
+
+    function saveSessions() {
+      localStorage.setItem("mmm_nexus_sessions", JSON.stringify(sessions));
+      renderHistoryList();
+    }
+
+    function createNewChat() {
+      const id = Date.now().toString();
+      sessions.unshift({
+        id,
+        title: "New Chat",
+        messages: [{ role: "ai", text: "నమస్తే! నేను MMM Nexus AI. నన్ను ఏదైనా అడగండి, ఫోటో అప్‌లోడ్ (📷) చేయండి, లేదా AI ఇమేజ్ (🎨) క్రియేట్ చేసుకోండి! 🚀" }]
+      });
+      currentSessionId = id;
+      saveSessions();
+      renderCurrentChat();
+    }
+
+    function getCurrentSession() {
+      let s = sessions.find(x => x.id === currentSessionId);
+      if (!s) {
+        if (sessions.length === 0) createNewChat();
+        else { currentSessionId = sessions[0].id; s = sessions[0]; }
+      }
+      return s;
+    }
+
+    function renderHistoryList() {
+      const list = document.getElementById("historyList");
+      list.innerHTML = "";
+      sessions.forEach(s => {
+        const item = document.createElement("div");
+        item.className = "history-item" + (s.id === currentSessionId ? " active" : "");
+        item.innerHTML = `<span class="history-title">${s.title}</span><button class="del-chat" onclick="deleteSession(event, '${s.id}')">🗑️</button>`;
+        item.onclick = () => {
+          currentSessionId = s.id;
+          renderHistoryList();
+          renderCurrentChat();
+          toggleSidebar(false);
+        };
+        list.appendChild(item);
+      });
+    }
+
+    function deleteSession(e, id) {
+      e.stopPropagation();
+      sessions = sessions.filter(s => s.id !== id);
+      if (sessions.length === 0) createNewChat();
+      else if (currentSessionId === id) {
+        currentSessionId = sessions[0].id;
+        saveSessions();
+        renderCurrentChat();
+      } else {
+        saveSessions();
+      }
+    }
+
+    function renderCurrentChat() {
+      const session = getCurrentSession();
+      chatBox.innerHTML = "";
+      session.messages.forEach(m => {
+        appendMsgDOM(m.text, m.role === "user" ? "user-msg" : "ai-msg", m.imageUrl, m.isGeneratedImg);
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function appendMsgDOM(text, cls, imageUrl = null, isGeneratedImg = false) {
+      const div = document.createElement("div");
+      div.className = "msg " + cls;
+
+      if (imageUrl) {
+        const img = document.createElement("img");
+        img.src = imageUrl;
+        img.className = "chat-img";
+        div.appendChild(img);
+      }
+
+      const span = document.createElement("span");
+      span.textContent = text;
+      div.appendChild(span);
+
+      if (cls === "ai-msg") {
+        const actions = document.createElement("div");
+        actions.className = "msg-actions";
+
+        if (isGeneratedImg && imageUrl) {
+          const dlBtn = document.createElement("a");
+          dlBtn.href = imageUrl;
+          dlBtn.download = "MMM_Nexus_AI.jpg";
+          dlBtn.target = "_blank";
+          dlBtn.className = "mini-btn";
+          dlBtn.style.textDecoration = "none";
+          dlBtn.textContent = "⬇️ Save";
+          actions.appendChild(dlBtn);
+        }
+
+        const speakBtn = document.createElement("button");
+        speakBtn.className = "mini-btn";
+        speakBtn.textContent = "🔊";
+        speakBtn.onclick = () => {
+          window.speechSynthesis.cancel();
+          const u = new SpeechSynthesisUtterance(span.textContent);
+          window.speechSynthesis.speak(u);
+        };
+
+        const copyBtn = document.createElement("button");
+        copyBtn.className = "mini-btn";
+        copyBtn.textContent = "📋 Copy";
+        copyBtn.onclick = () => {
+          navigator.clipboard.writeText(span.textContent);
+          copyBtn.textContent = "✅";
+          setTimeout(() => copyBtn.textContent = "📋 Copy", 1500);
+        };
+
+        actions.appendChild(speakBtn);
+        actions.appendChild(copyBtn);
+        div.appendChild(actions);
+      }
+
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+      return span;
+    }
+
+    function toggleSidebar(show) {
+      document.getElementById("sidebarOverlay").style.display = show ? "block" : "none";
+    }
 
     function toggleModal(show) {
       document.getElementById("founderModal").style.display = show ? "flex" : "none";
     }
 
-    function clearChat() {
-      chatHistory = [];
-      chatBox.innerHTML = `<div class="msg ai-msg">నమస్తే! కొత్త చాట్ మొదలైంది. నన్ను ఏదైనా అడగండి! 🚀<button class="copy-btn" onclick="copyText(this)">📋 Copy</button></div>`;
+    function handleImageSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      selectedMimeType = file.type || "image/jpeg";
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const fullDataUrl = e.target.result;
+        selectedImageBase64 = fullDataUrl.split(",")[1];
+        document.getElementById("previewImg").src = fullDataUrl;
+        document.getElementById("previewBar").style.display = "flex";
+      };
+      reader.readAsDataURL(file);
     }
 
-    function copyText(btn) {
-      const text = btn.parentElement.firstChild.textContent;
-      navigator.clipboard.writeText(text);
-      btn.textContent = "✅ Copied";
-      setTimeout(() => btn.textContent = "📋 Copy", 1500);
-    }
-
-    function addMsg(text, cls, withCopy = false) {
-      const div = document.createElement("div");
-      div.className = "msg " + cls;
-      div.textContent = text;
-      if (withCopy) {
-        const btn = document.createElement("button");
-        btn.className = "copy-btn";
-        btn.textContent = "📋 Copy";
-        btn.onclick = () => copyText(btn);
-        div.appendChild(btn);
-      }
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
-      return div;
+    function clearImage() {
+      selectedImageBase64 = null;
+      document.getElementById("imageInput").value = "";
+      document.getElementById("previewBar").style.display = "none";
     }
 
     function startVoice() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        alert("Voice input is not supported in this browser.");
-        return;
-      }
+      if (!SpeechRecognition) return alert("Voice input not supported in this browser.");
       const recognition = new SpeechRecognition();
       recognition.lang = "en-IN";
       recognition.onstart = () => micBtn.classList.add("listening");
       recognition.onend = () => micBtn.classList.remove("listening");
-      recognition.onresult = (e) => {
-        userInput.value = e.results[0][0].transcript;
-      };
+      recognition.onresult = (e) => { userInput.value = e.results[0][0].transcript; };
       recognition.start();
+    }
+
+    function generateAIImage() {
+      const promptText = userInput.value.trim() || prompt("🎨 ఏ ఫోటో క్రియేట్ చేయాలో ఇంగ్లీష్‌లో రాయండి (ఉదా: A futuristic golden lion):");
+      if (!promptText) return;
+      userInput.value = "";
+
+      const session = getCurrentSession();
+      if (session.title === "New Chat") session.title = "🎨 " + promptText.slice(0, 24);
+      session.messages.push({ role: "user", text: "🎨 Create image: " + promptText });
+      appendMsgDOM("🎨 Create image: " + promptText, "user-msg");
+
+      const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptText)}?width=768&height=768&nologo=true`;
+      session.messages.push({ role: "ai", text: "✨ Generated: " + promptText, imageUrl: imgUrl, isGeneratedImg: true });
+      saveSessions();
+      appendMsgDOM("✨ Generated: " + promptText, "ai-msg", imgUrl, true);
     }
 
     async function sendMessage() {
       const text = userInput.value.trim();
-      if (!text) return;
+      if (!text && !selectedImageBase64) return;
 
-      addMsg(text, "user-msg");
+      const session = getCurrentSession();
+      const displayMsg = text || "📷 Analyze this image";
+      const attachedImgDataUrl = selectedImageBase64 ? document.getElementById("previewImg").src : null;
+      const imgToSend = selectedImageBase64;
+      const mimeToSend = selectedMimeType;
+
+      if (session.title === "New Chat") session.title = displayMsg.slice(0, 26);
+      session.messages.push({ role: "user", text: displayMsg, imageUrl: attachedImgDataUrl });
+      saveSessions();
+
+      appendMsgDOM(displayMsg, "user-msg", attachedImgDataUrl);
       userInput.value = "";
+      clearImage();
       sendBtn.disabled = true;
 
-      const contextPrompt = chatHistory.length > 0
-        ? "Previous conversation:\n" + chatHistory.slice(-6).join("\n") + "\n\nCurrent User message: " + text
-        : text;
+      const recentHistory = session.messages.slice(-7, -1).map(m => `${m.role === "user" ? "User" : "AI"}: ${m.text}`).join("\n");
+      const finalPrompt = recentHistory ? `Previous chat:\n${recentHistory}\n\nUser: ${displayMsg}` : displayMsg;
 
-      const loading = addMsg("Thinking...", "ai-msg", true);
+      const loadingSpan = appendMsgDOM("Thinking...", "ai-msg");
       const wakeTimer = setTimeout(() => {
-        loading.firstChild.textContent = "Server waking up (first message takes ~25s)... ⏳";
+        loadingSpan.textContent = "Server waking up (~25s)... ⏳";
       }, 4500);
 
       try {
         const res = await fetch(BACKEND_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: contextPrompt })
+          body: JSON.stringify({
+            message: finalPrompt,
+            image: imgToSend,
+            mimeType: mimeToSend
+          })
         });
         clearTimeout(wakeTimer);
         const data = await res.json();
-        if (data.reply) {
-          loading.firstChild.textContent = data.reply;
-          chatHistory.push("User: " + text);
-          chatHistory.push("AI: " + data.reply);
-        } else {
-          loading.firstChild.textContent = "⚠️ " + (data.error || "Something went wrong. Please try again.");
-        }
+        const replyText = data.reply ? data.reply : ("⚠️ " + (data.error || "Please try again."));
+        loadingSpan.textContent = replyText;
+        session.messages.push({ role: "ai", text: replyText });
+        saveSessions();
       } catch (err) {
         clearTimeout(wakeTimer);
-        loading.firstChild.textContent = "⚠️ Connection error. Please wait 10 seconds and try again.";
+        loadingSpan.textContent = "⚠️ Connection error. Wait 10 seconds and try again.";
       } finally {
         sendBtn.disabled = false;
         userInput.focus();
       }
     }
+
+    // Initialize App
+    if (sessions.length === 0) createNewChat();
+    else { currentSessionId = sessions[0].id; renderHistoryList(); renderCurrentChat(); }
   </script>
 </body>
   </html>
+  
