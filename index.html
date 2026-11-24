@@ -1,167 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>MMM Nexus | AI Digital Ecosystem</title>
-  <meta name="description" content="MMM Nexus - Next-Gen AI Digital Ecosystem | Official Hub of Founder Murali Mohan.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>MMM Nexus | AI Ecosystem</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
     body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: #09090b;
-      color: #fafafa;
+      color: #f4f4f5;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
-      height: 100dvh;
       overflow: hidden;
     }
     .topbar {
-      background: linear-gradient(180deg, #18181b 0%, #09090b 100%);
-      border-bottom: 1px solid rgba(212, 175, 55, 0.35);
-      padding: 12px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 14px 18px;
+      background: #111114;
+      border-bottom: 1px solid #27272a;
       flex-shrink: 0;
     }
-    .brand {
-      text-align: left;
-    }
+    .brand { display: flex; flex-direction: column; }
     .brand h1 {
-      font-size: 19px;
+      font-size: 1.25rem;
       font-weight: 800;
-      background: linear-gradient(135deg, #fef08a 0%, #f59e0b 60%, #b45309 100%);
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #f59e0b, #fbbf24, #fde68a);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: 0.5px;
     }
-    .brand span {
-      font-size: 10.5px;
-      color: #a1a1aa;
-      display: block;
-    }
-    .top-actions {
-      display: flex;
-      gap: 8px;
-    }
-    .pill-btn {
-      background: rgba(251, 191, 36, 0.14);
-      color: #fde047;
-      border: 1px solid rgba(251, 191, 36, 0.4);
-      border-radius: 10px;
-      padding: 6px 10px;
-      font-size: 11.5px;
+    .brand span { font-size: 0.72rem; color: #a1a1aa; margin-top: 2px; }
+    .founder-btn {
+      background: #18181b;
+      color: #fbbf24;
+      border: 1px solid #3f3f46;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
     }
-    .chat-container {
+    .chat-box {
       flex: 1;
       overflow-y: auto;
-      padding: 16px;
+      padding: 18px 16px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      background: radial-gradient(circle at top, #181512 0%, #09090b 75%);
+      gap: 14px;
+      scroll-behavior: smooth;
     }
-    .msg-ai {
+    .msg {
+      max-width: 85%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 0.96rem;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .ai-msg {
       align-self: flex-start;
-      max-width: 88%;
-      background: rgba(255, 255, 255, 0.05);
+      background: #141417;
       border-left: 3px solid #f59e0b;
       color: #f4f4f5;
-      padding: 12px 14px;
-      border-radius: 4px 16px 16px 16px;
-      font-size: 14.5px;
-      line-height: 1.6;
-      white-space: pre-wrap;
     }
-    .msg-user {
+    .user-msg {
       align-self: flex-end;
-      max-width: 82%;
-      background: linear-gradient(135deg, #f59e0b, #d97706);
+      background: linear-gradient(135deg, #d97706, #f59e0b);
       color: #09090b;
-      padding: 11px 15px;
-      border-radius: 16px 16px 4px 16px;
-      font-size: 14.5px;
       font-weight: 600;
-      line-height: 1.5;
     }
     .input-bar {
-      background: #121215;
-      border-top: 1px solid rgba(212, 175, 55, 0.25);
-      padding: 10px 12px;
       display: flex;
-      gap: 8px;
+      gap: 10px;
+      padding: 12px 14px;
+      background: #111114;
+      border-top: 1px solid #27272a;
       flex-shrink: 0;
     }
-    .chat-input {
+    .input-bar input {
       flex: 1;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 22px;
-      padding: 12px 16px;
+      background: #18181b;
+      border: 1px solid #3f3f46;
       color: #fff;
-      font-size: 14.5px;
+      padding: 12px 16px;
+      border-radius: 25px;
+      font-size: 0.96rem;
       outline: none;
     }
-    .chat-send {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
+    .input-bar input:focus { border-color: #f59e0b; }
+    .input-bar button {
+      background: linear-gradient(135deg, #f59e0b, #fbbf24);
       color: #09090b;
       border: none;
-      border-radius: 22px;
       padding: 0 20px;
-      font-weight: 800;
-      font-size: 14px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 0.95rem;
       cursor: pointer;
     }
+    .input-bar button:disabled { opacity: 0.5; cursor: not-allowed; }
     .modal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.82);
-      backdrop-filter: blur(8px);
+      background: rgba(0,0,0,0.8);
       justify-content: center;
       align-items: center;
       padding: 20px;
       z-index: 50;
     }
     .modal-card {
-      background: #18181b;
-      border: 1px solid rgba(212, 175, 55, 0.45);
-      border-radius: 20px;
-      padding: 24px 20px;
+      background: #141417;
+      border: 1px solid #f59e0b;
+      border-radius: 18px;
+      padding: 24px;
+      max-width: 360px;
       width: 100%;
-      max-width: 380px;
       text-align: center;
     }
-    .modal-card h2 {
-      color: #fbbf24;
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
-    .modal-card p {
-      color: #d4d4d8;
-      font-size: 13px;
-      line-height: 1.55;
-      margin-bottom: 16px;
-    }
-    .link-btn {
-      display: block;
-      text-decoration: none;
-      padding: 11px;
-      margin: 8px 0;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 13.5px;
-      background: rgba(255, 255, 255, 0.06);
-      color: #fbbf24;
-      border: 1px solid rgba(251, 191, 36, 0.3);
-    }
-    .link-gold {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
+    .modal-card h2 { color: #fbbf24; margin-bottom: 10px; font-size: 1.2rem; }
+    .modal-card p { color: #d4d4d8; font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px; }
+    .modal-card button {
+      background: #f59e0b;
       color: #09090b;
       border: none;
+      padding: 9px 22px;
+      border-radius: 20px;
+      font-weight: 700;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -172,89 +142,78 @@
       <h1>✨ MMM NEXUS</h1>
       <span>AI Ecosystem • By Murali Mohan</span>
     </div>
-    <div class="top-actions">
-      <button class="pill-btn" onclick="toggleModal(true)">ℹ️ Founder</button>
-      <button class="pill-btn" onclick="setApiKey()">⚙️ Key</button>
-    </div>
+    <button class="founder-btn" onclick="toggleModal(true)">ℹ️ Founder</button>
   </div>
 
-  <div class="chat-container" id="chatLog">
-    <div class="msg-ai">నమస్తే! నేను <b>MMM Nexus AI</b>. అచ్చం మీ పర్సనల్ AI అసిస్టెంట్ లాగా నన్ను ఏదైనా అడగండి! 🚀</div>
+  <div class="chat-box" id="chatBox">
+    <div class="msg ai-msg">నమస్తే! నేను MMM Nexus AI. అచ్చం మీ పర్సనల్ AI అసిస్టెంట్ లాగా నన్ను ఏదైనా అడగండి! 🚀</div>
   </div>
 
   <div class="input-bar">
-    <input type="text" id="userInput" class="chat-input" placeholder="Ask MMM Nexus AI..." onkeypress="if(event.key==='Enter') sendMessage()">
-    <button class="chat-send" onclick="sendMessage()">Send</button>
+    <input type="text" id="userInput" placeholder="Ask MMM Nexus AI..." onkeypress="if(event.key==='Enter') sendMessage()" />
+    <button id="sendBtn" onclick="sendMessage()">Send</button>
   </div>
 
   <div class="modal" id="founderModal" onclick="if(event.target===this) toggleModal(false)">
     <div class="modal-card">
-      <h2>⚡ Murali Mohan</h2>
-      <p>Founder of MMM Nexus — Building a unified digital platform connecting AI, creators, and next-gen web apps from India to the world.</p>
-      <a class="link-btn link-gold" href="https://www.youtube.com/@muralimohan2723" target="_blank">YouTube Channel</a>
-      <a class="link-btn" href="https://www.instagram.com/murali_mmm_999" target="_blank">Instagram</a>
-      <a class="link-btn" href="https://github.com/mohanmurali917-sudo" target="_blank">GitHub Profile</a>
-      <button class="pill-btn" style="margin-top:12px; width:100%; padding:10px;" onclick="toggleModal(false)">Close</button>
+      <h2>👑 Murali Mohan</h2>
+      <p>Founder & Creator of <strong>MMM Nexus</strong> — an AI-powered digital ecosystem built from scratch to make smart technology accessible to everyone.</p>
+      <button onclick="toggleModal(false)">Close</button>
     </div>
   </div>
 
   <script>
+    const BACKEND_URL = "https://mmm-nexus-backend.onrender.com/chat";
+    const chatBox = document.getElementById("chatBox");
+    const userInput = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+
     function toggleModal(show) {
-      document.getElementById('founderModal').style.display = show ? 'flex' : 'none';
+      document.getElementById("founderModal").style.display = show ? "flex" : "none";
     }
 
-    function setApiKey() {
-      const current = localStorage.getItem('mmm_gemini_key') || '';
-      const key = prompt('Enter your Google Gemini API Key:', current);
-      if (key !== null) {
-        localStorage.setItem('mmm_gemini_key', key.trim());
-        alert('API Key Saved! Now MMM Nexus AI is ready.');
-      }
-    }
-
-    async function callGemini(model, apiKey, text) {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: "You are MMM Nexus AI, created by founder Murali Mohan. Answer clearly, warmly, and helpfully in the same language the user asks (Telugu, English, or Tenglish): " + text }] }]
-        })
-      });
-      return await res.json();
+    function addMsg(text, cls) {
+      const div = document.createElement("div");
+      div.className = "msg " + cls;
+      div.textContent = text;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+      return div;
     }
 
     async function sendMessage() {
-      const input = document.getElementById('userInput');
-      const log = document.getElementById('chatLog');
-      const text = input.value.trim();
+      const text = userInput.value.trim();
       if (!text) return;
 
-      log.innerHTML += `<div class="msg-user">${text}</div>`;
-      input.value = '';
-      log.scrollTop = log.scrollHeight;
+      addMsg(text, "user-msg");
+      userInput.value = "";
+      sendBtn.disabled = true;
 
-      const apiKey = localStorage.getItem('mmm_gemini_key');
-      if (!apiKey) {
-        log.innerHTML += `<div class="msg-ai">దయచేసి పైన '⚙️ Key' నొక్కి మీ Gemini API Key ఇవ్వండి.</div>`;
-        log.scrollTop = log.scrollHeight;
-        return;
-      }
-
-      const loadId = 'load-' + Date.now();
-      log.innerHTML += `<div class="msg-ai" id="${loadId}">Thinking...</div>`;
-      log.scrollTop = log.scrollHeight;
+      const loading = addMsg("Thinking...", "ai-msg");
+      const wakeTimer = setTimeout(() => {
+        loading.textContent = "Server waking up (first message takes ~25s)... ⏳";
+      }, 4500);
 
       try {
-        let data = await callGemini('gemini-3.5-flash', apiKey, text);
-        if (data?.error) {
-          data = await callGemini('gemini-3.5-flash-lite', apiKey, text);
+        const res = await fetch(BACKEND_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text })
+        });
+        clearTimeout(wakeTimer);
+        const data = await res.json();
+        if (data.reply) {
+          loading.textContent = data.reply;
+        } else {
+          loading.textContent = "⚠️ " + (data.error || "Something went wrong. Please try again.");
         }
-        const aiText = data?.candidates?.[0]?.content?.parts?.[0]?.text || ("Error: " + (data?.error?.message || "Try again."));
-        document.getElementById(loadId).innerText = aiText;
-      } catch (e) {
-        document.getElementById(loadId).innerText = "Network error. Please try again.";
+      } catch (err) {
+        clearTimeout(wakeTimer);
+        loading.textContent = "⚠️ Connection error. Please wait 10 seconds and try again.";
+      } finally {
+        sendBtn.disabled = false;
+        userInput.focus();
       }
-      log.scrollTop = log.scrollHeight;
     }
   </script>
 </body>
