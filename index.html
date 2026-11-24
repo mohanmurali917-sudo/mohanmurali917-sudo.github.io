@@ -214,7 +214,7 @@
         <button class="key-btn" onclick="setApiKey()">⚙️ API Key</button>
       </div>
       <div class="chat-log" id="chatLog">
-        <div class="msg-ai">నమస్తే! నేను <b>MMM Nexus AI</b>. నన్ను ఏదైనా అడగండి! (Full AI కోసం పైన ⚙️ API Key సెట్ చేయండి)</div>
+        <div class="msg-ai">నమస్తే! నేను <b>MMM Nexus AI</b>. నన్ను ఏదైనా అడగండి!</div>
       </div>
       <div class="chat-input-row">
         <input type="text" id="userInput" class="chat-input" placeholder="Ask anything..." onkeypress="if(event.key==='Enter') sendMessage()">
@@ -235,68 +235,61 @@
 
     <div class="footer">© 2026 MMM Nexus • Founder Edition</div>
   </div>
-<script>
-  function setApiKey() {
-    const current = localStorage.getItem('mmm_gemini_key') || '';
-    const key = prompt('Enter your Google Gemini API Key (from aistudio.google.com):', current);
-    if (key !== null) {
-      localStorage.setItem('mmm_gemini_key', key.trim());
-      alert('API Key Saved! Now MMM Nexus AI is active.');
-    }
-  }
 
-  async function sendMessage() {
-    const input = document.getElementById('userInput');
-    const log = document.getElementById('chatLog');
-    const text = input.value.trim();
-    if (!text) return;
-
-    log.innerHTML += `<div class="msg-user">${text}</div>`;
-    input.value = '';
-    log.scrollTop = log.scrollHeight;
-
-    const apiKey = (localStorage.getItem('mmm_gemini_key') || '').trim();
-    if (!apiKey) {
-      let reply = "నేను MMM Nexus AI! నన్ను ఏదైనా అడగండి! (Full AI కోసం పైన 🔑 API Key సెట్ చేయండి)";
-      const q = text.toLowerCase();
-      if (q.includes('founder') || q.includes('who')) {
-        reply = "MMM Nexus ఫౌండర్ Murali Mohan.";
-      } else if (q.includes('vision')) {
-        reply = "MMM Nexus లక్ష్యం: AI, క్రియేటర్స్ మరియు నెక్స్ట్-జెన్ వెబ్ అప్లికేషన్లను అనుసంధానించడం.";
+  <script>
+    function setApiKey() {
+      const current = localStorage.getItem('mmm_gemini_key') || '';
+      const key = prompt('Enter your Google Gemini API Key:', current);
+      if (key !== null) {
+        localStorage.setItem('mmm_gemini_key', key.trim());
+        alert('API Key Saved! Now MMM Nexus AI is ready.');
       }
-      setTimeout(() => {
-        log.innerHTML += `<div class="msg-ai">${reply}</div>`;
-        log.scrollTop = log.scrollHeight;
-      }, 300);
-      return;
     }
 
-    const loadId = 'load-' + Date.now();
-    log.innerHTML += `<div class="msg-ai" id="${loadId}">ఆలోచిస్తున్నాను...</div>`;
-    log.scrollTop = log.scrollHeight;
-
-    try {
-      const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent', {
+    async function callGemini(model, apiKey, text) {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-goog-api-key': apiKey
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: text }] }]
+          contents: [{ parts: [{ text: "You are MMM Nexus AI, created by founder Murali Mohan. Answer concisely, warmly, and helpfully in the same language the user asks (Telugu, English, or Tenglish): " + text }] }]
         })
       });
+      return await res.json();
+    }
 
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data?.error?.message || 'API Error');
+    async function sendMessage() {
+      const input = document.getElementById('userInput');
+      const log = document.getElementById('chatLog');
+      const text = input.value.trim();
+      if (!text) return;
+
+      log.innerHTML += `<div class="msg-user">${text}</div>`;
+      input.value = '';
+      log.scrollTop = log.scrollHeight;
+
+      const apiKey = localStorage.getItem('mmm_gemini_key');
+      if (!apiKey) {
+        log.innerHTML += `<div class="msg-ai">దయచేసి పైన '⚙️ API Key' నొక్కి మీ Gemini Key ఇవ్వండి.</div>`;
+        log.scrollTop = log.scrollHeight;
+        return;
       }
 
-      const aiText = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'సమాధానం రాలేదు.';
-      document.getElementById(loadId).innerText = aiText;
-    } catch (e) {
-      document.getElementById(loadId).innerText = 'Error: ' + e.message;
+      const loadId = 'load-' + Date.now();
+      log.innerHTML += `<div class="msg-ai" id="${loadId}">Thinking...</div>`;
+      log.scrollTop = log.scrollHeight;
+
+      try {
+        let data = await callGemini('gemini-2.5-flash', apiKey, text);
+        if (data?.error) {
+          data = await callGemini('gemini-2.5-flash-lite', apiKey, text);
+        }
+        const aiText = data?.candidates?.[0]?.content?.parts?.[0]?.text || ("Error: " + (data?.error?.message || "Try again."));
+        document.getElementById(loadId).innerText = aiText;
+      } catch (e) {
+        document.getElementById(loadId).innerText = "Network error. Please try again.";
+      }
+      log.scrollTop = log.scrollHeight;
     }
-    log.scrollTop = log.scrollHeight;
-  }
-</script>
+  </script>
+</body>
+        </html>
