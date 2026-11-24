@@ -60,49 +60,82 @@
       line-height: 1.55;
       white-space: pre-wrap;
       word-wrap: break-word;
+      position: relative;
     }
     .ai-msg {
       align-self: flex-start;
       background: #141417;
       border-left: 3px solid #f59e0b;
       color: #f4f4f5;
+      padding-bottom: 34px;
+    }
+    .copy-btn {
+      position: absolute;
+      bottom: 6px;
+      right: 10px;
+      background: #27272a;
+      color: #fbbf24;
+      border: 1px solid #3f3f46;
+      border-radius: 8px;
+      padding: 2px 8px;
+      font-size: 0.72rem;
+      cursor: pointer;
     }
     .user-msg {
       align-self: flex-end;
       background: linear-gradient(135deg, #d97706, #f59e0b);
-      color: #09090b;
-      font-weight: 600;
+      color: #000000;
+      font-weight: 700;
     }
     .input-bar {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       padding: 12px 14px;
       background: #111114;
       border-top: 1px solid #27272a;
       flex-shrink: 0;
+      align-items: center;
     }
     .input-bar input {
       flex: 1;
       background: #18181b;
       border: 1px solid #3f3f46;
-      color: #fff;
-      padding: 12px 16px;
+      color: #ffffff;
+      padding: 12px 14px;
       border-radius: 25px;
       font-size: 0.96rem;
       outline: none;
     }
     .input-bar input:focus { border-color: #f59e0b; }
-    .input-bar button {
-      background: linear-gradient(135deg, #f59e0b, #fbbf24);
-      color: #09090b;
+    .mic-btn {
+      background: #18181b;
+      color: #fbbf24;
+      border: 1px solid #3f3f46;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .mic-btn.listening {
+      background: #dc2626;
+      color: #ffffff;
+      border-color: #ef4444;
+    }
+    .send-btn {
+      background: #f59e0b;
+      color: #000000 !important;
       border: none;
-      padding: 0 20px;
+      padding: 0 18px;
+      height: 44px;
       border-radius: 25px;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 0.95rem;
       cursor: pointer;
+      flex-shrink: 0;
     }
-    .input-bar button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .modal {
       display: none;
       position: fixed;
@@ -126,7 +159,7 @@
     .modal-card p { color: #d4d4d8; font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px; }
     .modal-card button {
       background: #f59e0b;
-      color: #09090b;
+      color: #000000;
       border: none;
       padding: 9px 22px;
       border-radius: 20px;
@@ -146,12 +179,13 @@
   </div>
 
   <div class="chat-box" id="chatBox">
-    <div class="msg ai-msg">నమస్తే! నేను MMM Nexus AI. అచ్చం మీ పర్సనల్ AI అసిస్టెంట్ లాగా నన్ను ఏదైనా అడగండి! 🚀</div>
+    <div class="msg ai-msg">నమస్తే! నేను MMM Nexus AI. అచ్చం మీ పర్సనల్ AI అసిస్టెంట్ లాగా నన్ను ఏదైనా అడగండి! 🚀<button class="copy-btn" onclick="copyText(this)">📋 Copy</button></div>
   </div>
 
   <div class="input-bar">
-    <input type="text" id="userInput" placeholder="Ask MMM Nexus AI..." onkeypress="if(event.key==='Enter') sendMessage()" />
-    <button id="sendBtn" onclick="sendMessage()">Send</button>
+    <input type="text" id="userInput" placeholder="Ask or tap mic..." onkeypress="if(event.key==='Enter') sendMessage()" />
+    <button class="mic-btn" id="micBtn" onclick="startVoice()" title="Voice Input">🎤</button>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
   </div>
 
   <div class="modal" id="founderModal" onclick="if(event.target===this) toggleModal(false)">
@@ -167,18 +201,49 @@
     const chatBox = document.getElementById("chatBox");
     const userInput = document.getElementById("userInput");
     const sendBtn = document.getElementById("sendBtn");
+    const micBtn = document.getElementById("micBtn");
 
     function toggleModal(show) {
       document.getElementById("founderModal").style.display = show ? "flex" : "none";
     }
 
-    function addMsg(text, cls) {
+    function copyText(btn) {
+      const text = btn.parentElement.firstChild.textContent;
+      navigator.clipboard.writeText(text);
+      btn.textContent = "✅ Copied";
+      setTimeout(() => btn.textContent = "📋 Copy", 1500);
+    }
+
+    function addMsg(text, cls, withCopy = false) {
       const div = document.createElement("div");
       div.className = "msg " + cls;
       div.textContent = text;
+      if (withCopy) {
+        const btn = document.createElement("button");
+        btn.className = "copy-btn";
+        btn.textContent = "📋 Copy";
+        btn.onclick = () => copyText(btn);
+        div.appendChild(btn);
+      }
       chatBox.appendChild(div);
       chatBox.scrollTop = chatBox.scrollHeight;
       return div;
+    }
+
+    function startVoice() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Voice input is not supported in this browser.");
+        return;
+      }
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-IN";
+      recognition.onstart = () => micBtn.classList.add("listening");
+      recognition.onend = () => micBtn.classList.remove("listening");
+      recognition.onresult = (e) => {
+        userInput.value = e.results[0][0].transcript;
+      };
+      recognition.start();
     }
 
     async function sendMessage() {
@@ -189,9 +254,9 @@
       userInput.value = "";
       sendBtn.disabled = true;
 
-      const loading = addMsg("Thinking...", "ai-msg");
+      const loading = addMsg("Thinking...", "ai-msg", true);
       const wakeTimer = setTimeout(() => {
-        loading.textContent = "Server waking up (first message takes ~25s)... ⏳";
+        loading.firstChild.textContent = "Server waking up (first message takes ~25s)... ⏳";
       }, 4500);
 
       try {
@@ -203,13 +268,13 @@
         clearTimeout(wakeTimer);
         const data = await res.json();
         if (data.reply) {
-          loading.textContent = data.reply;
+          loading.firstChild.textContent = data.reply;
         } else {
-          loading.textContent = "⚠️ " + (data.error || "Something went wrong. Please try again.");
+          loading.firstChild.textContent = "⚠️ " + (data.error || "Something went wrong. Please try again.");
         }
       } catch (err) {
         clearTimeout(wakeTimer);
-        loading.textContent = "⚠️ Connection error. Please wait 10 seconds and try again.";
+        loading.firstChild.textContent = "⚠️ Connection error. Please wait 10 seconds and try again.";
       } finally {
         sendBtn.disabled = false;
         userInput.focus();
@@ -217,4 +282,4 @@
     }
   </script>
 </body>
-  </html>
+        </html>
