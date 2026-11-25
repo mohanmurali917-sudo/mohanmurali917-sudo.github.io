@@ -805,7 +805,61 @@
         if (e.target && e.target.id === "inp" && e.key === "Enter" && !e.shiftKey) smartPicTrigger(e);
       }, true);
     })();
+    </script> 
+    <script>
+    (function() {
+      var realFetch = window.fetch;
+      window.fetch = function(url, opts) {
+        try {
+          if (opts && opts.body && typeof opts.body === "string") {
+            var data = JSON.parse(opts.body);
+            var raw = (data.message || "").split("Current User Message:").pop().trim();
+            if (/\b(pic|picture|image|photo|draw|paint|wallpaper|avatar)\b/i.test(raw) && raw.length < 150) {
+              var clean = raw.replace(/\b(i want|give me|show me|create|generate|make|a|an|the|of|for|me|please|pic|picture|image|photo|draw|paint)\b/gi, " ").replace(/\s+/g, " ").trim() || raw;
+              var seed = Math.floor(Math.random() * 999999);
+              var imgUrl = "https://image.pollinations.ai/prompt/" + encodeURIComponent(clean + ", realistic, 8k, detailed") + "?width=768&height=768&seed=" + seed + "&nologo=true";
+              var backupUrl = "https://gen.pollinations.ai/image/" + encodeURIComponent(clean) + "?width=768&height=768&seed=" + seed + "&nologo=true";
+
+              setTimeout(function() {
+                var box = document.createElement("div");
+                box.className = "msg ai";
+                var st = document.createElement("div");
+                st.style.cssText = "font-size:12px;color:#fbbf24;margin-bottom:6px;";
+                st.textContent = "⏳ Generating HD Image: " + clean + "...";
+
+                var img = document.createElement("img");
+                img.referrerPolicy = "no-referrer";
+                img.style.cssText = "width:100%;max-width:300px;border-radius:12px;display:none;";
+
+                var tried = false;
+                img.onload = function() {
+                  st.style.color = "#38bdf8";
+                  st.textContent = "✨ " + clean;
+                  img.style.display = "block";
+                  if (typeof push === "function") push("HD Image: " + clean, "ai", img.src, true);
+                  $("chat").scrollTop = $("chat").scrollHeight;
+                };
+                img.onerror = function() {
+                  if (!tried) { tried = true; img.src = backupUrl; }
+                  else { st.innerHTML = "⚠️ <a href='" + imgUrl + "' target='_blank' style='color:#38bdf8;text-decoration:underline;'>Tap here to open HD Image</a>"; }
+                };
+
+                box.appendChild(st);
+                box.appendChild(img);
+                $("chat").appendChild(box);
+                $("chat").scrollTop = $("chat").scrollHeight;
+                img.src = imgUrl;
+              }, 100);
+
+              return new Promise(function() {});
+            }
+          }
+        } catch (err) {}
+        return realFetch.apply(this, arguments);
+      };
+    })();
     </script>
+  
   
   
   
