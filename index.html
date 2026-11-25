@@ -697,7 +697,116 @@
         }
       }, true);
     })();
+    </script> 
+    <script>
+    (function() {
+      function smartPicTrigger(e) {
+        var inp = $("inp");
+        var v = (inp && inp.value || "").trim();
+        if (/\b(pic|picture|image|photo|draw|paint|wallpaper|avatar)\b/i.test(v) && v.length < 140) {
+          if (e) { e.preventDefault(); e.stopImmediatePropagation(); }
+          var clean = v.replace(/\b(i want|give me|show me|create|generate|make|a|an|the|of|for|me|please|pic|picture|image|photo|draw|paint)\b/gi, " ").replace(/\s+/g, " ").trim() || v;
+          var seed = Math.floor(Math.random() * 999999);
+          var url1 = "https://image.pollinations.ai/prompt/" + encodeURIComponent(clean + ", realistic, ultra detailed, 8k") + "?width=768&height=768&seed=" + seed + "&nologo=true";
+          var url2 = "https://gen.pollinations.ai/image/" + encodeURIComponent(clean) + "?width=768&height=768&seed=" + seed + "&nologo=true";
+
+          push(v, "user");
+          addMsg(v, "user");
+          inp.value = "";
+
+          var box = document.createElement("div");
+          box.className = "msg ai";
+          var st = document.createElement("div");
+          st.style.cssText = "font-size:12px;color:#fbbf24;margin-bottom:6px;";
+          st.textContent = "⏳ Creating HD Image: " + clean + "...";
+
+          var img = document.createElement("img");
+          img.referrerPolicy = "no-referrer";
+          img.style.cssText = "width:100%;max-width:300px;border-radius:12px;display:none;";
+
+          var backup = false;
+          img.onload = function() {
+            st.style.color = "#38bdf8";
+            st.textContent = "✨ " + clean;
+            img.style.display = "block";
+            push("Image: " + clean, "ai", img.src, true);
+            $("chat").scrollTop = $("chat").scrollHeight;
+          };
+          img.onerror = function() {
+            if (!backup) { backup = true; img.src = url2; }
+            else { st.innerHTML = "⚠️ <a href='" + url1 + "' target='_blank' style='color:#38bdf8;text-decoration:underline;'>Tap here to view " + clean + "</a>"; }
+          };
+
+          box.appendChild(st);
+          box.appendChild(img);
+          $("chat").appendChild(box);
+          $("chat").scrollTop = $("chat").scrollHeight;
+          img.src = url1;
+        }
+      }
+      window.addEventListener("click", function(e) {
+        if (e.target && (e.target.id === "sendBtn" || (e.target.textContent || "").trim() === "Send")) smartPicTrigger(e);
+      }, true);
+      window.addEventListener("keydown", function(e) {
+        if (e.target && e.target.id === "inp" && e.key === "Enter" && !e.shiftKey) smartPicTrigger(e);
+      }, true);
+    })();
     </script>
+    <script>
+    (function() {
+      function smartPicTrigger(e) {
+        var inp = $("inp");
+        var v = (inp && inp.value || "").trim();
+        if (/\b(pic|picture|image|photo|draw|paint|wallpaper|avatar)\b/i.test(v) && v.length < 140) {
+          if (e) { e.preventDefault(); e.stopImmediatePropagation(); }
+          var clean = v.replace(/\b(i want|give me|show me|create|generate|make|a|an|the|of|for|me|please|pic|picture|image|photo|draw|paint)\b/gi, " ").replace(/\s+/g, " ").trim() || v;
+          var seed = Math.floor(Math.random() * 999999);
+          var url1 = "https://image.pollinations.ai/prompt/" + encodeURIComponent(clean + ", realistic, ultra detailed, 8k") + "?width=768&height=768&seed=" + seed + "&nologo=true";
+          var url2 = "https://gen.pollinations.ai/image/" + encodeURIComponent(clean) + "?width=768&height=768&seed=" + seed + "&nologo=true";
+
+          push(v, "user");
+          addMsg(v, "user");
+          inp.value = "";
+
+          var box = document.createElement("div");
+          box.className = "msg ai";
+          var st = document.createElement("div");
+          st.style.cssText = "font-size:12px;color:#fbbf24;margin-bottom:6px;";
+          st.textContent = "⏳ Creating HD Image: " + clean + "...";
+
+          var img = document.createElement("img");
+          img.referrerPolicy = "no-referrer";
+          img.style.cssText = "width:100%;max-width:300px;border-radius:12px;display:none;";
+
+          var backup = false;
+          img.onload = function() {
+            st.style.color = "#38bdf8";
+            st.textContent = "✨ " + clean;
+            img.style.display = "block";
+            push("Image: " + clean, "ai", img.src, true);
+            $("chat").scrollTop = $("chat").scrollHeight;
+          };
+          img.onerror = function() {
+            if (!backup) { backup = true; img.src = url2; }
+            else { st.innerHTML = "⚠️ <a href='" + url1 + "' target='_blank' style='color:#38bdf8;text-decoration:underline;'>Tap here to view " + clean + "</a>"; }
+          };
+
+          box.appendChild(st);
+          box.appendChild(img);
+          $("chat").appendChild(box);
+          $("chat").scrollTop = $("chat").scrollHeight;
+          img.src = url1;
+        }
+      }
+      window.addEventListener("click", function(e) {
+        if (e.target && (e.target.id === "sendBtn" || (e.target.textContent || "").trim() === "Send")) smartPicTrigger(e);
+      }, true);
+      window.addEventListener("keydown", function(e) {
+        if (e.target && e.target.id === "inp" && e.key === "Enter" && !e.shiftKey) smartPicTrigger(e);
+      }, true);
+    })();
+    </script>
+  
   
   
   
