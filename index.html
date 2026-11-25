@@ -417,7 +417,80 @@
         origSend();
       };
     })();
+    </script> 
+    <script>
+    (function() {
+      var sheet = document.querySelector("#toolM .sheet");
+      function addAccTool(title, tag, fn) {
+        var r = document.createElement("div"); r.className = "row";
+        r.innerHTML = "<strong>" + title + "</strong><span>" + tag + "</span>";
+        r.onclick = function() { $("toolM").style.display = "none"; fn(); };
+        sheet.appendChild(r);
+      }
+
+      // 1. Email / Secret Code Profile Switcher (Multi-User History)
+      addAccTool("Account Profile (Email / Code)", "Free", function() {
+        var curUser = localStorage.getItem("m3_active_user") || "Guest";
+        var id = prompt("Current Profile: " + curUser + "\n\nEnter your Email or Secret Code to load/save your personal history (or type 'Guest'):", curUser);
+        if (!id) return;
+        id = id.trim().toLowerCase();
+        var prevKey = "m3_hist_" + curUser;
+        localStorage.setItem(prevKey, JSON.stringify(sessions));
+        var saved = localStorage.getItem("m3_hist_" + id);
+        if (saved) {
+          try { sessions = JSON.parse(saved); } catch (e) {}
+        } else {
+          sessions = [{ id: Date.now(), title: id + " Chat", msgs: [] }];
+        }
+        localStorage.setItem("m3_active_user", id);
+        curId = sessions[0].id;
+        if (typeof save === "function") save();
+        if (typeof renderList === "function") renderList();
+        if (typeof loadChat === "function") loadChat(curId);
+        addMsg("Switched to Profile: " + id + " (" + sessions.length + " chats loaded)", "ai");
+      });
+
+      // 2. Export Full History Backup File (.json)
+      addAccTool("Download History Backup (.json)", "Free", function() {
+        var user = localStorage.getItem("m3_active_user") || "Guest";
+        var data = JSON.stringify({ user: user, date: new Date().toISOString(), sessions: sessions });
+        var blob = new Blob([data], { type: "application/json" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "M3_Nexus_History_" + user + ".json";
+        a.click();
+        addMsg("Backup downloaded! You can restore this file on any phone or laptop.", "ai");
+      });
+
+      // 3. Restore History Backup File (.json)
+      addAccTool("Restore History Backup (.json)", "Free", function() {
+        var inpF = document.createElement("input");
+        inpF.type = "file"; inpF.accept = ".json";
+        inpF.onchange = function(e) {
+          var f = e.target.files[0]; if (!f) return;
+          var reader = new FileReader();
+          reader.onload = function(ev) {
+            try {
+              var parsed = JSON.parse(ev.target.result);
+              if (parsed.sessions && Array.isArray(parsed.sessions)) {
+                sessions = parsed.sessions;
+                curId = sessions[0].id;
+                if (typeof save === "function") save();
+                if (typeof renderList === "function") renderList();
+                if (typeof loadChat === "function") loadChat(curId);
+                addMsg("History restored successfully! (" + sessions.length + " chats recovered)", "ai");
+              } else {
+                alert("Invalid backup file!");
+              }
+            } catch (err) { alert("Could not read backup file!"); }
+          };
+          reader.readAsText(f);
+        };
+        inpF.click();
+      });
+    })();
     </script>
+  
   
   
 </body>
