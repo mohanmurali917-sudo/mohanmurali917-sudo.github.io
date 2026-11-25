@@ -530,7 +530,76 @@
         else topBar.appendChild(accBtn);
       }
     })();
-        </script>
+        </script> 
+    <script>
+    (function() {
+      // 1. Top-Right Sign In Pill (Placed cleanly beside Save button)
+      if (!document.getElementById("m3-signin-pill")) {
+        var curUser = localStorage.getItem("m3_active_user") || "Sign In";
+        var pill = document.createElement("button");
+        pill.id = "m3-signin-pill";
+        pill.style.cssText = "position:fixed;top:12px;right:195px;z-index:99999;background:#09090b;color:#38bdf8;border:1px solid #38bdf8;border-radius:999px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;";
+        pill.textContent = "👤 " + curUser;
+        pill.onclick = function() {
+          var active = localStorage.getItem("m3_active_user") || "Guest";
+          var id = prompt("M3 Nexus Account (" + active + ")\nEnter Email or Secret Code:", active === "Guest" ? "" : active);
+          if (!id) return;
+          id = id.trim().toLowerCase();
+          localStorage.setItem("m3_hist_" + active, JSON.stringify(sessions));
+          var saved = localStorage.getItem("m3_hist_" + id);
+          sessions = saved ? JSON.parse(saved) : [{ id: Date.now(), title: id + " Chat", msgs: [] }];
+          localStorage.setItem("m3_active_user", id);
+          curId = sessions[0].id;
+          pill.textContent = "👤 " + id;
+          if (typeof save === "function") save();
+          if (typeof renderList === "function") renderList();
+          if (typeof loadChat === "function") loadChat(curId);
+          addMsg("Signed in as: " + id, "ai");
+        };
+        document.body.appendChild(pill);
+      }
+
+      // 2. Capture-Phase Interceptor (Stops backend call for pic/image/draw)
+      function triggerPic(e) {
+        var inp = $("inp");
+        var txt = (inp && inp.value || "").trim();
+        if (/^(generate\s+)?(an?\s+)?(pic|picture|image|photo|draw|paint)(\s+of|\s+:|\s+)/i.test(txt)) {
+          if (e) { e.preventDefault(); e.stopImmediatePropagation(); }
+          var clean = txt.replace(/^(generate\s+)?(an?\s+)?(pic|picture|image|photo|draw|paint)(\s+of)?\s*:?\s*/i, "").trim() || txt;
+          var seed = Math.floor(Math.random() * 999999);
+          var url = "https://image.pollinations.ai/prompt/" + encodeURIComponent(clean + ", photorealistic, 8k") + "?width=768&height=768&nologo=true&seed=" + seed;
+          push(txt, "user");
+          addMsg(txt, "user");
+          inp.value = "";
+          var box = document.createElement("div");
+          box.className = "msg ai";
+          box.innerHTML = "<div style='font-size:12px;color:#fbbf24;margin-bottom:6px;'>Generating HD Pic: <b>" + clean + "</b>...</div><img referrerpolicy='no-referrer' style='width:100%;max-width:300px;border-radius:12px;display:block;' src='" + url + "' />";
+          var img = box.querySelector("img");
+          img.onload = function() {
+            box.querySelector("div").textContent = "HD Pic: " + clean;
+            push("HD Pic: " + clean, "ai", url, true);
+          };
+          $("chat").appendChild(box);
+          $("chat").scrollTop = $("chat").scrollHeight;
+          return true;
+        }
+        return false;
+      }
+
+      document.addEventListener("click", function(e) {
+        if (e.target && (e.target.id === "sendBtn" || (e.target.textContent || "").trim() === "Send")) {
+          triggerPic(e);
+        }
+      }, true);
+
+      document.addEventListener("keydown", function(e) {
+        if (e.target && e.target.id === "inp" && e.key === "Enter" && !e.shiftKey) {
+          if (!triggerPic(e)) { e.preventDefault(); e.stopImmediatePropagation(); send(); }
+        }
+      }, true);
+    })();
+    </script>
+  
   
   
   
