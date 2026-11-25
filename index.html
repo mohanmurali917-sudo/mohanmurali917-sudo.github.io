@@ -361,7 +361,64 @@
         if (n !== null) { localStorage.setItem("m3_note", n); addMsg("Saved Note:\n" + n, "ai"); }
       });
     })();
-                          </script>
+                          </script> 
+    <script>
+    (function() {
+      // 1. Laptop Enter Key to Send (Shift+Enter for new line)
+      var inp = $("inp");
+      if (inp) {
+        inp.addEventListener("keydown", function(e) {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            send();
+          }
+        });
+      }
+
+      // 2. Direct HD Image Command ("pic ...", "image ...", "draw ...")
+      function showDirectPic(promptText) {
+        var clean = promptText.replace(/^(generate\s+)?(an?\s+)?(pic|picture|image|photo|draw|paint)(\s+of)?\s*:?\s*/i, "").trim() || promptText;
+        var seed = Math.floor(Math.random() * 999999);
+        var url = "https://image.pollinations.ai/prompt/" + encodeURIComponent(clean + ", ultra detailed, 8k, realistic") + "?width=768&height=768&model=flux&nologo=true&seed=" + seed;
+        push(promptText, "user");
+        addMsg(promptText, "user");
+        inp.value = "";
+        var i = push("Generated HD Image: " + clean, "ai", url, true);
+        addMsg("Generated HD Image: " + clean, "ai", url, true, i);
+      }
+
+      // 3. Conversation History Memory + Direct Image Interceptor
+      var origSend = window.send;
+      window.send = function() {
+        var txt = (inp.value || "").trim();
+        if (!txt) return;
+        if (/^(generate\s+)?(an?\s+)?(pic|picture|image|photo|draw|paint)(\s+of|\s+:|\s+)/i.test(txt)) {
+          showDirectPic(txt);
+          return;
+        }
+        var cur = sessions.find(function(s) { return s.id === curId; });
+        if (cur && cur.msgs && cur.msgs.length > 0) {
+          var recent = cur.msgs.slice(-6).map(function(m) {
+            return (m.role === "user" ? "User: " : "AI: ") + (m.text || "").slice(0, 250);
+          }).join("\n");
+          var origFetch = window.fetch;
+          window.fetch = function(u, opts) {
+            if (opts && opts.body && typeof opts.body === "string" && opts.body.indexOf(txt) !== -1) {
+              try {
+                var b = JSON.parse(opts.body);
+                if (b.message) b.message = "Previous chat context:\n" + recent + "\n\nCurrent User Message: " + b.message;
+                opts.body = JSON.stringify(b);
+              } catch (e) {}
+            }
+            window.fetch = origFetch;
+            return origFetch.apply(this, arguments);
+          };
+        }
+        origSend();
+      };
+    })();
+    </script>
+  
   
 </body>
 </html> 
