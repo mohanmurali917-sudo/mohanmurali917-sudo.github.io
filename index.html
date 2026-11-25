@@ -858,7 +858,72 @@
         return realFetch.apply(this, arguments);
       };
     })();
+    </script> 
+    <script>
+    (function() {
+      var realFetch2 = window.fetch;
+      window.fetch = function(url, opts) {
+        try {
+          if (opts && opts.body && typeof opts.body === "string" && url.indexOf("stablehorde") === -1) {
+            var data = JSON.parse(opts.body);
+            var raw = (data.message || "").split("Current User Message:").pop().trim();
+            if (/\b(pic|picture|image|photo|draw|paint|wallpaper|avatar)\b/i.test(raw) && raw.length < 150) {
+              var clean = raw.replace(/\b(i want|give me|show me|create|generate|make|a|an|the|of|for|me|please|pic|picture|image|photo|draw|paint)\b/gi, " ").replace(/\s+/g, " ").trim() || raw;
+
+              setTimeout(async function() {
+                var box = document.createElement("div");
+                box.className = "msg ai";
+                var st = document.createElement("div");
+                st.style.cssText = "font-size:12px;color:#fbbf24;margin-bottom:6px;";
+                st.textContent = "🎨 Generating HD AI Image: " + clean + " (10-15 sec)...";
+                box.appendChild(st);
+                $("chat").appendChild(box);
+                $("chat").scrollTop = $("chat").scrollHeight;
+
+                try {
+                  var res = await realFetch2("https://stablehorde.net/api/v2/generate/async", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "apikey": "0000000000" },
+                    body: JSON.stringify({
+                      prompt: clean + ", photorealistic, ultra detailed, 8k, sharp focus",
+                      params: { width: 512, height: 512, steps: 20 }
+                    })
+                  });
+                  var job = await res.json();
+                  if (!job.id) throw new Error("Queue busy");
+
+                  for (var t = 0; t < 25; t++) {
+                    await new Promise(function(r) { setTimeout(r, 2000); });
+                    var chk = await realFetch2("https://stablehorde.net/api/v2/generate/status/" + job.id);
+                    var status = await chk.json();
+                    if (status.done && status.generations && status.generations[0]) {
+                      var imgUrl = status.generations[0].img;
+                      st.style.color = "#38bdf8";
+                      st.textContent = "✨ " + clean;
+                      var img = document.createElement("img");
+                      img.src = imgUrl;
+                      img.style.cssText = "width:100%;max-width:300px;border-radius:12px;display:block;";
+                      box.appendChild(img);
+                      if (typeof push === "function") push("HD Image: " + clean, "ai", imgUrl, true);
+                      $("chat").scrollTop = $("chat").scrollHeight;
+                      return;
+                    }
+                  }
+                  st.textContent = "⚠️ Server took too long, try again!";
+                } catch (e) {
+                  st.textContent = "⚠️ Could not generate right now, please retry!";
+                }
+              }, 100);
+
+              return new Promise(function() {});
+            }
+          }
+        } catch (err) {}
+        return realFetch2.apply(this, arguments);
+      };
+    })();
     </script>
+  
   
   
   
