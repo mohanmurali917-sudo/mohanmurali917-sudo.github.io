@@ -198,6 +198,70 @@
     }
     $("sendBtn").onclick = send;
     sessions.length ? load() : newChat();
+  </script> 
+  <script>
+    (function() {
+      var sheet = document.querySelector("#toolM .sheet");
+      var vRate = 1, vPitch = 1;
+      window.speak = function(t) {
+        if (!window.speechSynthesis) return;
+        speechSynthesis.cancel();
+        var c = t.split(TK)[0].replace(/[*#]/g, ""), u = new SpeechSynthesisUtterance(c);
+        u.lang = /[\u0C00-\u0C7F]/.test(c) ? "te-IN" : "en-IN";
+        u.rate = vRate; u.pitch = vPitch;
+        speechSynthesis.speak(u);
+      };
+      function addTool(title, tag, fn) {
+        var r = document.createElement("div"); r.className = "row";
+        r.innerHTML = "<strong>" + title + "</strong><span>" + tag + "</span>";
+        r.onclick = function() { $("toolM").style.display = "none"; fn(); };
+        sheet.appendChild(r);
+      }
+      addTool("Live Web Search (Wiki)", "Free", async function() {
+        var q = prompt("Search live topic on internet:");
+        if (!q) return;
+        var uIdx = push("Web Search: " + q, "user"); addMsg("Web Search: " + q, "user", null, false, uIdx);
+        var ld = addMsg("Searching live web...", "ai");
+        try {
+          var res = await fetch("https://en.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(q.trim()));
+          var d = await res.json();
+          ld.d.remove();
+          var rep = d.extract ? ("**" + d.title + "**" + NL + d.extract) : "No direct summary found. Ask in normal chat!";
+          var aIdx = push(rep, "ai"); addMsg(rep, "ai", d.thumbnail ? d.thumbnail.source : null, false, aIdx);
+        } catch (e) { ld.box.textContent = "Search failed, try again."; }
+      });
+      addTool("AI Video Story Maker", "Free", function() {
+        var topic = prompt("Enter topic for 3-Scene AI Video Story:", "Future AI City");
+        if (!topic) return;
+        var box = document.createElement("div"); box.className = "modal c"; box.style.display = "flex";
+        box.innerHTML = '<div class="card"><h3 style="color:#fbbf24">AI Video: ' + topic + '</h3><img id="vidImg" style="width:100%;height:200px;object-fit:cover;border-radius:12px;background:#000" /><p id="vidCap" style="font-size:0.86rem;color:#e4e4e7"></p><button class="btn" id="vidCls">Close Video</button></div>';
+        document.body.appendChild(box);
+        $("vidCls").onclick = function() { speechSynthesis.cancel(); box.remove(); };
+        var scenes = [
+          { p: topic + " cinematic wide shot 4k", t: "Scene 1: Welcome to the world of " + topic },
+          { p: topic + " futuristic close up glowing lights", t: "Scene 2: Exploring the power and innovation behind " + topic },
+          { p: topic + " epic sunset finale masterpiece", t: "Scene 3: The future belongs to creators like you!" }
+        ];
+        var step = 0;
+        function playScene() {
+          if (!document.body.contains(box) || step === scenes.length) return;
+          var sc = scenes[step++];
+          $("vidImg").src = "https://image.pollinations.ai/prompt/" + encodeURIComponent(sc.p) + "?width=640&height=360&nologo=true&seed=" + step;
+          $("vidCap").textContent = sc.t;
+          speak(sc.t);
+          setTimeout(playScene, 5500);
+        }
+        playScene();
+      });
+      addTool("Pro Voice Studio", "Free", function() {
+        var r = prompt("Voice Speed (0.7 = Slow, 1 = Normal, 1.3 = Fast):", vRate);
+        var p = prompt("Voice Pitch (0.7 = Deep Male, 1 = Normal, 1.4 = High):", vPitch);
+        if (r) vRate = Math.max(0.5, Math.min(2, parseFloat(r) || 1));
+        if (p) vPitch = Math.max(0.5, Math.min(2, parseFloat(p) || 1));
+        speak("Voice studio updated! This is your new MMM Nexus voice.");
+        addMsg("Voice Studio updated (Speed: " + vRate + ", Pitch: " + vPitch + ")", "ai");
+      });
+    })();
   </script>
 </body>
 </html> 
