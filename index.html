@@ -262,6 +262,59 @@
         addMsg("Voice Studio updated (Speed: " + vRate + ", Pitch: " + vPitch + ")", "ai");
       });
     })();
+  </script> 
+  <script>
+    (function() {
+      var sheet = document.querySelector("#toolM .sheet");
+      var origSave = window.save;
+      window.save = function() {
+        try { origSave(); } catch (e) {
+          sessions.forEach(function(s) { s.msgs.forEach(function(m) { if (m.img && m.img.length > 5000) m.img = null; }); });
+          try { origSave(); } catch (e2) {}
+        }
+      };
+      function addMore(title, tag, fn) {
+        var r = document.createElement("div"); r.className = "row";
+        r.innerHTML = "<strong>" + title + "</strong><span>" + tag + "</span>";
+        r.onclick = function() { $("toolM").style.display = "none"; fn(); };
+        sheet.appendChild(r);
+      }
+      addMore("Telugu <-> English Translator", "Free", function() {
+        var t = prompt("Enter text to translate & summarize:");
+        if (!t) return;
+        $("inp").value = "Translate this clearly into simple Telugu and English with 3 key bullet points:\n\n" + t;
+        send();
+      });
+      addMore("AI Quiz & Interview Coach", "Free", function() {
+        var topic = prompt("Enter topic for 5-Question Quiz (e.g., English, Computers, GK):", "Computers & AI");
+        if (!topic) return;
+        $("inp").value = "Start an interactive 5-question quiz on '" + topic + "'. Ask Question 1 with 4 options (A, B, C, D) and wait for my answer!";
+        send();
+      });
+      addMore("Smart Math & Unit Solver", "Free", function() {
+        var q = prompt("Enter calculation or conversion (e.g., 15% of 4500 or 50 USD in INR):");
+        if (!q) return;
+        $("inp").value = "Solve this step-by-step clearly: " + q;
+        send();
+      });
+      addMore("Instant Meme & Poster Maker", "Free", function() {
+        var topT = prompt("Top text on poster:", "M3 NEXUS AI");
+        var botT = prompt("Bottom text on poster:", "BUILT ON ANDROID PHONE");
+        if (!topT) return;
+        var c = document.createElement("canvas"); c.width = 600; c.height = 400;
+        var ctx = c.getContext("2d");
+        var g = ctx.createLinearGradient(0, 0, 600, 400);
+        g.addColorStop(0, "#18181b"); g.addColorStop(1, "#f59e0b");
+        ctx.fillStyle = g; ctx.fillRect(0, 0, 600, 400);
+        ctx.fillStyle = "#ffffff"; ctx.font = "bold 34px system-ui"; ctx.textAlign = "center";
+        ctx.fillText(topT.toUpperCase(), 300, 140);
+        ctx.fillStyle = "#fde047"; ctx.font = "bold 24px system-ui";
+        ctx.fillText((botT || "").toUpperCase(), 300, 270);
+        var url = c.toDataURL("image/png");
+        var i = push("Poster: " + topT, "ai", url, true);
+        addMsg("Poster: " + topT, "ai", url, true, i);
+      });
+    })();
   </script>
 </body>
 </html> 
