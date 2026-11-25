@@ -489,7 +489,49 @@
         inpF.click();
       });
     })();
-    </script>
+    </script> 
+    <script>
+    (function() {
+      // 1. Update Title & Header to M3 Nexus
+      document.title = "M3 Nexus";
+      var h1 = document.querySelector(".top h1");
+      if (h1) h1.textContent = "M3 Nexus";
+
+      // 2. Add Direct Top-Bar Sign In / Profile Button
+      var topBar = document.querySelector(".top");
+      if (topBar) {
+        var curUser = localStorage.getItem("m3_active_user") || "Sign In";
+        var accBtn = document.createElement("button");
+        accBtn.className = "btn";
+        accBtn.style.cssText = "margin-left:auto;margin-right:6px;padding:5px 10px;font-size:0.78rem;border:1px solid #38bdf8;color:#38bdf8;";
+        accBtn.textContent = "👤 " + curUser;
+        accBtn.onclick = function() {
+          var active = localStorage.getItem("m3_active_user") || "Guest";
+          var id = prompt("M3 Nexus Account\nCurrent: " + active + "\n\nEnter Email or Secret Code to Sign In & load your history (or type 'Guest'):", active === "Guest" ? "" : active);
+          if (!id) return;
+          id = id.trim().toLowerCase();
+          localStorage.setItem("m3_hist_" + active, JSON.stringify(sessions));
+          var saved = localStorage.getItem("m3_hist_" + id);
+          if (saved) {
+            try { sessions = JSON.parse(saved); } catch (e) {}
+          } else {
+            sessions = [{ id: Date.now(), title: id + " Chat", msgs: [] }];
+          }
+          localStorage.setItem("m3_active_user", id);
+          curId = sessions[0].id;
+          accBtn.textContent = "👤 " + id;
+          if (typeof save === "function") save();
+          if (typeof renderList === "function") renderList();
+          if (typeof loadChat === "function") loadChat(curId);
+          addMsg("Signed in as: " + id + " (" + sessions.length + " chats loaded)", "ai");
+        };
+        var firstBtn = topBar.querySelector("button");
+        if (firstBtn) topBar.insertBefore(accBtn, firstBtn);
+        else topBar.appendChild(accBtn);
+      }
+    })();
+        </script>
+  
   
   
   
