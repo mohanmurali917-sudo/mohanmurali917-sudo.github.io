@@ -315,6 +315,53 @@
         addMsg("Poster: " + topT, "ai", url, true, i);
       });
     })();
-  </script>
+  </script> 
+    <script>
+    (function() {
+      var sheet = document.querySelector("#toolM .sheet"), th = 0;
+      var themes = ["#f59e0b", "#38bdf8", "#22c55e"];
+      function addPro(title, tag, fn) {
+        var r = document.createElement("div"); r.className = "row";
+        r.innerHTML = "<strong>" + title + "</strong><span>" + tag + "</span>";
+        r.onclick = function() { $("toolM").style.display = "none"; fn(); };
+        sheet.appendChild(r);
+      }
+      addPro("Voice-to-Text Mic (Speak)", "Free", function() {
+        var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SR) return alert("Voice mic not supported in this browser");
+        var rec = new SR(); rec.lang = "en-IN";
+        addMsg("Listening... Speak now!", "ai");
+        rec.onresult = function(e) { $("inp").value = e.results[0][0].transcript; send(); };
+        rec.start();
+      });
+      addPro("M3 Theme Switcher", "Free", function() {
+        th = (th + 1) % themes.length;
+        document.querySelector(".top h1").style.color = themes[th];
+        $("sendBtn").style.background = themes[th];
+        addMsg("Theme color updated!", "ai");
+      });
+      addPro("AI Resume & Bio Builder", "Free", function() {
+        var info = prompt("Enter Name, Qualification & Skills:");
+        if (!info) return;
+        $("inp").value = "Create a clean, professional Resume summary and a catchy Instagram/LinkedIn bio for: " + info;
+        send();
+      });
+      addPro("Tech Fact & Quote Card", "Free", function() {
+        $("inp").value = "Give me 1 mind-blowing technology fact and 1 short motivational quote for today in English and Telugu.";
+        send();
+      });
+      addPro("Strong Password Generator", "Free", function() {
+        var chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789@#&*!";
+        var pw = ""; for (var i = 0; i < 14; i++) pw += chars[Math.floor(Math.random() * chars.length)];
+        addMsg("Generated Secure Password:\n" + pw, "ai");
+      });
+      addPro("Quick Sticky Note", "Free", function() {
+        var prev = localStorage.getItem("m3_note") || "";
+        var n = prompt("Your Quick Note (Saved in browser):", prev);
+        if (n !== null) { localStorage.setItem("m3_note", n); addMsg("Saved Note:\n" + n, "ai"); }
+      });
+    })();
+                          </script>
+  
 </body>
 </html> 
