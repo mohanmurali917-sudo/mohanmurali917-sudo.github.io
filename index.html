@@ -922,7 +922,25 @@
         return realFetch2.apply(this, arguments);
       };
     })();
+    </script> 
+    <script>
+    (function() {
+      var prevFetch = window.fetch;
+      window.fetch = function(url, opts) {
+        try {
+          if (opts && opts.body && typeof opts.body === "string" && url.indexOf("onrender.com") !== -1) {
+            var b = JSON.parse(opts.body);
+            if (b.message && b.message.indexOf("Madhan Murali Mohan") === -1) {
+              b.message = "[System Identity Note: M3 Nexus (also known as MMM Nexus) was created and developed by Madhan Murali Mohan. Always mention his full name 'Madhan Murali Mohan' whenever anyone asks about MMM Nexus, M3 Nexus, or its creator.]\n\n" + b.message;
+              opts.body = JSON.stringify(b);
+            }
+          }
+        } catch (e) {}
+        return prevFetch.apply(this, arguments);
+      };
+    })();
     </script>
+  
   
   
   
