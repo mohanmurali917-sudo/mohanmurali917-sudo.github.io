@@ -154,6 +154,8 @@
         var cb = p.bl.find(function(x){return x.c.indexOf(LT)>-1;}), code = cb ? cb.c : (t.indexOf(LT+"html")>-1 ? t : null);
         if (code) { var b4 = document.createElement("button"); b4.className = "chip g"; b4.textContent = "Canvas"; b4.onclick = function() { $("cCode").value = code; $("rFr").srcdoc = code; $("runM").style.display = "flex"; }; row.appendChild(b4); }
         var b5 = document.createElement("button"); b5.className = "chip g"; b5.textContent = "..."; b5.onclick = function() { actObj = { t: t, idx: idx, d: d }; $("actM").style.display = "flex"; }; row.appendChild(b5);
+              var bw = document.createElement("button"); bw.className = "chip g"; bw.textContent = "💬 Share"; bw.style.cssText = "background:#14532d;color:#4ade80;border:1px solid #4ade80;"; bw.onclick = function() { window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(t + "\n\n✨ Answered by M3 Nexus AI:\nhttps://mohanmurali917-sudo.github.io/"), "_blank"); }; row.appendChild(bw);
+        
       }
       if (row.children.length) d.appendChild(row); $("chat").appendChild(d); $("chat").scrollTop = $("chat").scrollHeight; return { d: d, box: box };
     }
