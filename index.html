@@ -167,7 +167,8 @@
       }
       if (row.children.length) d.appendChild(row); $("chat").appendChild(d); $("chat").scrollTop = $("chat").scrollHeight; return { d: d, box: box };
     }
-    function newChat() { curId = Date.now().toString(); sessions.unshift({ id: curId, title: "New Chat", msgs: [{ t: "Hello **Murali**! MMM Nexus is LIVE with **Multi-line input, Copy, Redo, Share, ... Menu & + Tools**!", y: "ai" }] }); save(); load(); }
+      function newChat() { curId = Date.now().toString(); sessions.unshift({ id: curId, title: "New Chat", msgs: [{ t: "Hello! Welcome to **M3 Nexus** — your AI assistant with **Multi-line input, Copy, Redo, Share, ... Menu & + Tools**! How can I help you today?", y: "ai" }] }); save(); load(); }
+    
     function load() { var s = sessions.find(function(x){return x.id===curId;}) || sessions[0]; if (!s) return newChat(); curId = s.id; $("chat").innerHTML = ""; s.msgs.forEach(function(m, i) { addMsg(m.t, m.y, m.img, m.save, i, m.pin); }); }
     function push(t, y, img, sf) { var s = sessions.find(function(x){return x.id===curId;}); if (!s) return -1; if (y === "user" && s.title === "New Chat") s.title = t.slice(0, 20); s.msgs.push({ t: t, y: y, img: img, save: sf, pin: false }); save(); return s.msgs.length - 1; }
     $("newBtn").onclick = newChat; $("plusBtn").onclick = function() { $("toolM").style.display = "flex"; }; $("tClose").onclick = function() { $("toolM").style.display = "none"; };
