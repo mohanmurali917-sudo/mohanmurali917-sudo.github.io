@@ -10,6 +10,7 @@
 
   <meta name="robots" content="index, follow" /> 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="manifest" href="manifest.json" />
   
   <link rel="canonical" href="https://mohanmurali917-sudo.github.io/" />
   
@@ -175,7 +176,8 @@
     try {
       var gd = JSON.parse(gm[1]);
       var gw = document.createElement("div"); gw.style.cssText = "background:#111114;border:1px solid #27272a;border-radius:12px;padding:12px;margin-top:10px;";
-      var cv = document.createElement("canvas"); gw.appendChild(cv); d.appendChild(gw);
+      var cv = document.createElement("canvas"); gw.appendChild(cv); var gb = document.createElement("button"); gb.textContent = "Save Graph 📥"; gb.style.cssText = "margin-top:8px;padding:6px 12px;border-radius:8px;border:1px solid #fbbf24;background:#18181b;color:#fbbf24;font-size:12px;font-weight:700;cursor:pointer;"; gb.onclick = function() { var a = document.createElement("a"); a.href = cv.toDataURL("image/png"); a.download = "M3_Nexus_Graph.png"; a.click(); }; gw.appendChild(gb); d.appendChild(gw);
+    
       if (window.Chart) new Chart(cv, { type: gd.type || "bar", data: { labels: gd.labels, datasets: [{ label: gd.title || "Data", data: gd.values, backgroundColor: ["#fbbf24","#38bdf8","#4ade80","#f472b6","#a78bfa","#fb923c"], borderColor: "#fbbf24", borderWidth: 1 }] }, options: { responsive: true, plugins: { legend: { labels: { color: "#e4e4e7" } } }, scales: { x: { ticks: { color: "#a1a1aa" } }, y: { ticks: { color: "#a1a1aa" } } } } });
     } catch (e) {}
   }
