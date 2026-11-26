@@ -57,7 +57,14 @@
   <script data-cfasync="false" src="https://bauval.org/14/3bb6f46a1997f4513e8dd4bb9826530c"></script>
   <div class="side-bg" id="sideBg"><div class="side"><div style="display:flex;justify-content:space-between;color:#fbbf24;font-weight:800;"><span>History</span><button class="btn" id="closeSide">X</button></div><div id="hList" style="display:flex;flex-direction:column;gap:7px;overflow-y:auto;"></div></div></div>
   <div class="chat" id="chat"></div>
-  <div class="pill" id="pill"><span id="pillTxt"></span><button class="btn" id="clrPill" style="padding:2px 7px;">X</button></div>
+  <div class="pill" id="pill"><span id="pillTxt"></span><button class="btn" id="clrPill" style="padding:2px 7px;">X</button></div> 
+    <div class="quick-chips" style="display:flex; gap:8px; overflow-x:auto; padding:6px 10px; scrollbar-width:none;">
+    <button type="button" onclick="useQuickPrompt('Write a clean, well-structured essay or formal letter on: ')" style="background:#18181b; color:#fbbf24; border:1px solid #fbbf24; border-radius:20px; padding:5px 12px; font-size:12px; white-space:nowrap; cursor:pointer;">✍️ Essay / Letter</button>
+    <button type="button" onclick="useQuickPrompt('Write clean, working code with explanation for: ')" style="background:#18181b; color:#fbbf24; border:1px solid #fbbf24; border-radius:20px; padding:5px 12px; font-size:12px; white-space:nowrap; cursor:pointer;">💻 Write Code</button>
+    <button type="button" onclick="useQuickPrompt('Translate this between Telugu and English naturally: ')" style="background:#18181b; color:#fbbf24; border:1px solid #fbbf24; border-radius:20px; padding:5px 12px; font-size:12px; white-space:nowrap; cursor:pointer;">🇮🇳 Telugu ↔ English</button>
+    <button type="button" onclick="useQuickPrompt('Give me 5 stylish, viral Instagram bios for: ')" style="background:#18181b; color:#fbbf24; border:1px solid #fbbf24; border-radius:20px; padding:5px 12px; font-size:12px; white-space:nowrap; cursor:pointer;">🔥 Viral Insta Bio</button>
+    </div>
+  
   <div class="bar">
     <input type="file" id="fileIn" accept="image/*" style="display:none" />
     <input type="file" id="docIn" accept=".pdf,.txt,.md,.csv,.html,.js,.py" style="display:none" />
@@ -111,6 +118,8 @@
     function $(id) { return document.getElementById(id); }
     function grow() { var e = $("inp"); e.style.height = "38px"; e.style.height = Math.min(e.scrollHeight, 135) + "px"; }
     $("inp").oninput = grow;
+      function useQuickPrompt(t) { $("inp").value = t; grow(); $("inp").focus(); }
+    
     try { sessions = JSON.parse(localStorage.getItem("mmm_v55") || "[]"); } catch (e) {}
     function save() { try { localStorage.setItem("mmm_v55", JSON.stringify(sessions)); } catch (e) {} }
     function pill(m, t) { mode = m; $("pillTxt").textContent = t; $("pill").style.display = t ? "flex" : "none"; }
