@@ -47,7 +47,8 @@
   </head>
 <body>
   <div class="top"> 
-        <span id="pCnt" style="background:#18181b;color:#fbbf24;border:1px solid #fbbf24;border-radius:12px;padding:2px 8px;font-size:11px;font-weight:bold;">⚡ 0 Prompts</span>
+            <span id="pCnt" style="background:#18181b;color:#fbbf24;border:1px solid #fbbf24;border-radius:10px;padding:2px 6px;font-size:10px;font-weight:bold;white-space:nowrap;">⚡ 0</span>
+    
     
     <div style="display:flex;gap:6px;align-items:center;"><button class="btn" id="menuBtn">&#9776;</button><h1>MMM NEXUS</h1></div>
     <div style="display:flex;gap:5px;"><button class="btn" id="expBtn">Save</button><button class="btn" id="piBtn">Memory</button><button class="btn" id="newBtn">+ New</button></div>
@@ -71,7 +72,7 @@
     <input type="file" id="fileIn" accept="image/*" style="display:none" />
     <input type="file" id="docIn" accept=".pdf,.txt,.md,.csv,.html,.js,.py" style="display:none" />
     <button class="btn ico" id="plusBtn">+</button>
-    <textarea id="inp" rows="1" placeholder="Ask anything or paste big text..."></textarea>
+    <textarea id="inp" spellcheck="true" autocorrect="on" rows="1" placeholder="Ask anything or paste big text..."></textarea>
     <button class="btn ico" id="micBtn">Mic</button>
     <button class="send" id="sendBtn">Send</button>
   </div>
@@ -123,7 +124,8 @@
     function grow() { var e = $("inp"); e.style.height = "38px"; e.style.height = Math.min(e.scrollHeight, 135) + "px"; }
     $("inp").oninput = grow;
       function useQuickPrompt(t) { $("inp").value = t; grow(); $("inp").focus(); } 
-      var pTotal = parseInt(localStorage.getItem("m3_pcnt") || "0"); if ($("pCnt")) $("pCnt").textContent = "⚡ " + pTotal + " Prompts"; setTimeout(function() { var _oSend = send; send = async function() { if ($("inp").value.trim()) { pTotal++; localStorage.setItem("m3_pcnt", pTotal); if ($("pCnt")) $("pCnt").textContent = "⚡ " + pTotal + " Prompts"; } return _oSend.apply(this, arguments); }; }, 500);
+        var pTotal = parseInt(localStorage.getItem("m3_pcnt") || "0"); if ($("pCnt")) $("pCnt").textContent = "⚡ " + pTotal; setTimeout(function() { var incP = function() { if ($("inp") && $("inp").value.trim()) { pTotal++; localStorage.setItem("m3_pcnt", pTotal); if ($("pCnt")) $("pCnt").textContent = "⚡ " + pTotal; } }; if ($("sendBtn")) $("sendBtn").addEventListener("click", incP, true); if ($("inp")) $("inp").addEventListener("keydown", function(e) { if (e.key === "Enter" && !e.shiftKey) incP(); }, true); }, 500);
+    
     
     
     try { sessions = JSON.parse(localStorage.getItem("mmm_v55") || "[]"); } catch (e) {}
