@@ -46,7 +46,9 @@
   </style>
   </head>
 <body>
-  <div class="top">
+  <div class="top"> 
+        <span id="pCnt" style="background:#18181b;color:#fbbf24;border:1px solid #fbbf24;border-radius:12px;padding:2px 8px;font-size:11px;font-weight:bold;">⚡ 0 Prompts</span>
+    
     <div style="display:flex;gap:6px;align-items:center;"><button class="btn" id="menuBtn">&#9776;</button><h1>MMM NEXUS</h1></div>
     <div style="display:flex;gap:5px;"><button class="btn" id="expBtn">Save</button><button class="btn" id="piBtn">Memory</button><button class="btn" id="newBtn">+ New</button></div>
   </div>
@@ -111,7 +113,9 @@
     <button class="chip g" id="rUpd" style="margin:4px;align-self:flex-end;">Update Preview</button>
     <iframe id="rFr"></iframe>
   </div></div>
-  <script>
+  <script> 
+      var pTotal = parseInt(localStorage.getItem("m3_pcnt") || "0"); if ($("pCnt")) $("pCnt").textContent = "⚡ " + pTotal + " Prompts"; var _oSend = send; send = async function() { if ($("inp").value.trim()) { pTotal++; localStorage.setItem("m3_pcnt", pTotal); if ($("pCnt")) $("pCnt").textContent = "⚡ " + pTotal + " Prompts"; } return _oSend.apply(this, arguments); };
+    
     var API = "https://mmm-nexus-backend.onrender.com", TK = String.fromCharCode(96,96,96), NL = String.fromCharCode(10), LT = String.fromCharCode(60);
     var imgB64 = null, imgMime = "image/jpeg", imgPrev = null, docCtx = null, sessions = [], curId = null, imgCool = 0, mode = "", actObj = {};
     var bio = localStorage.getItem("mmm_bio") || "User: Murali Mohan. Language: Telugu & English.";
