@@ -155,7 +155,8 @@
         eb.onclick = function() { var s = sessions.find(function(x){return x.id===curId;}); if (s && idx >= 0) { s.msgs = s.msgs.slice(0, idx); save(); load(); } $("inp").value = t; grow(); };
         d.appendChild(box); d.appendChild(eb); $("chat").appendChild(d); $("chat").scrollTop = $("chat").scrollHeight; return { d: d, box: box };
       }
-      var p = fmt(t); box.innerHTML = p.html;
+      var p = fmt(t.replace(/\[(GRAPH|OPTIONS):[\s\S]*?\]/g, "").trim()); box.innerHTML = p.html;
+      
       box.querySelectorAll(".cc").forEach(function(b) { b.onclick = function() { copyT(p.bl[b.dataset.i].c, b); }; });
       d.appendChild(box);
       var row = document.createElement("div"); row.className = "acts";
