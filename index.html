@@ -1005,6 +1005,8 @@
         return prevFetch.apply(this, arguments);
       };
     })();
+      if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+      
     </script>
   
   
@@ -1016,5 +1018,6 @@
   
   
  
+  
 </body>
 </html> 
