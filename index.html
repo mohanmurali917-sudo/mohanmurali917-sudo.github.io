@@ -1147,5 +1147,26 @@
   setInterval(ensureWelcome, 1500);
 })();
 </script>
+<script>
+(function () {
+  var horseHTML = '<div id="m3HorseBanner" style="display:flex;align-items:center;gap:10px;padding:10px 14px;margin:8px 10px;border-radius:12px;background:#141417;border:1px solid #fbbf24;color:#fbbf24;font-weight:800;"><span class="horse-anim">🐎</span><span>M3 Nexus Horse is live!</span></div>';
+
+  function showHorse() {
+    var chat = document.getElementById("chat");
+    if (!chat) return;
+    if (!document.getElementById("m3HorseBanner")) {
+      chat.insertAdjacentHTML("afterbegin", horseHTML);
+    }
+    chat.querySelectorAll("*").forEach(function (el) {
+      if (el.children.length === 0 && el.textContent && el.textContent.indexOf("Thinking") !== -1) {
+        el.innerHTML = '<span class="horse-anim">🐎</span><span>M3 Nexus is galloping...</span>';
+      }
+    });
+  }
+
+  window.addEventListener("DOMContentLoaded", showHorse);
+  setInterval(showHorse, 800);
+})();
+</script>
 </body> 
 </html> 
