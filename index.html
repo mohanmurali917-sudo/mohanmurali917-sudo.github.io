@@ -1008,29 +1008,29 @@
       if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
       
     </script>
-  
-  
-  
-  
-  
-  
-  
-  
-  
- 
-<style>
+  <style>
     @keyframes m3Gallop { 0% { transform: translateX(0) rotate(-6deg); } 100% { transform: translateX(8px) rotate(8deg) scale(1.12); } }
-    @keyframes m3PopIn { from { opacity: 0; transform: scale(0.92) translateY(15px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-    #m3WelcomeModal {
-      display: none; position: fixed; inset: 0; z-index: 99999;
-      background: radial-gradient(circle at top, #1f190d 0%, #09090b 80%);
+    @keyframes m3PopIn { from { opacity: 0; transform: scale(0.88) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    @keyframes m3Shine { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+    @keyframes m3FadeOut { 0% { opacity: 1; transform: scale(1); } 80% { opacity: 1; transform: scale(1.03); } 100% { opacity: 0; transform: scale(1.08); pointer-events: none; } }
+
+    #m3WelcomeModal, #m3RoyalSplash {
+      display: none; position: fixed; inset: 0; z-index: 999999;
+      background: radial-gradient(circle at top, #271f0e 0%, #09090b 85%);
       align-items: center; justify-content: center; padding: 18px;
     }
     .m3-w-card {
-      background: #121216; border: 1.5px solid #fbbf24; border-radius: 22px;
-      padding: 26px 20px; max-width: 380px; width: 100%; text-align: center;
-      box-shadow: 0 0 35px rgba(251, 191, 36, 0.25); animation: m3PopIn 0.45s ease;
+      background: #121216; border: 1.5px solid #fbbf24; border-radius: 24px;
+      padding: 28px 22px; max-width: 380px; width: 100%; text-align: center;
+      box-shadow: 0 0 40px rgba(251, 191, 36, 0.3); animation: m3PopIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
+    .m3-gold-shine {
+      background: linear-gradient(90deg, #fbbf24, #fffbeb, #f59e0b, #fbbf24);
+      background-size: 200% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: m3Shine 2.4s linear infinite;
+    }
+    .m3-splash-anim { animation: m3FadeOut 2.8s forwards ease-in-out; }
     .m3-horse-bar {
       display: flex; align-items: center; gap: 10px; padding: 11px 14px; margin: 8px 0;
       background: #141418; border: 1px solid #fbbf24; border-radius: 14px;
@@ -1039,14 +1039,27 @@
     .m3-horse-run { font-size: 22px; display: inline-block; animation: m3Gallop 0.45s infinite alternate ease-in-out; }
   </style>
 
+  <!-- Step 1: Name Entry Modal -->
   <div id="m3WelcomeModal">
     <div class="m3-w-card">
-      <div style="font-size:38px;margin-bottom:6px;">🐎👑</div>
-      <div style="font-size:23px;font-weight:900;color:#fbbf24;">Welcome to M<sup>3</sup> Nexus</div>
-      <div style="font-size:12px;color:#fde68a;margin:4px 0 14px;">Created by <b>Madhan Murali Mohan</b></div>
-      <p style="font-size:12.5px;color:#a1a1aa;margin-bottom:12px;">Enter your name to personalize your AI workspace:</p>
-      <input id="m3VisitorInp" type="text" placeholder="Enter your name..." style="width:100%;padding:12px;border-radius:12px;border:1px solid #3f3f46;background:#18181b;color:#fff;font-size:14px;text-align:center;outline:none;margin-bottom:12px;" />
-      <button onclick="saveM3Visitor()" style="width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#fbbf24,#d97706);color:#000;font-weight:800;font-size:14px;cursor:pointer;">Start M³ Nexus 🐎</button>
+      <div style="font-size:42px;margin-bottom:6px;animation:m3Gallop 0.6s infinite alternate;">🐎👑</div>
+      <div class="m3-gold-shine" style="font-size:25px;font-weight:900;">M<sup>3</sup> Nexus AI</div>
+      <div style="font-size:12px;color:#fde68a;margin:4px 0 16px;">Architected by <b>Madhan Murali Mohan</b></div>
+      <p style="font-size:12.5px;color:#a1a1aa;margin-bottom:12px;">Enter your name to unlock your Royal AI Experience:</p>
+      <input id="m3VisitorInp" type="text" placeholder="Type your name..." style="width:100%;padding:12px;border-radius:12px;border:1.5px solid #fbbf24;background:#18181b;color:#fff;font-size:14.5px;text-align:center;outline:none;margin-bottom:14px;" />
+      <button onclick="saveM3Visitor()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#fbbf24,#d97706);color:#000;font-weight:900;font-size:14.5px;cursor:pointer;box-shadow:0 4px 18px rgba(251,191,36,0.35);">Enter Royal Workspace 🐎</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Cinematic Dual-Name Welcome Animation -->
+  <div id="m3RoyalSplash">
+    <div class="m3-w-card" style="border-width:2px;">
+      <div style="font-size:48px;margin-bottom:8px;animation:m3Gallop 0.45s infinite alternate;">🐎✨</div>
+      <div style="font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#fde68a;font-weight:700;">Welcome</div>
+      <div id="m3SplashUser" class="m3-gold-shine" style="font-size:28px;font-weight:900;margin:6px 0;">Guest</div>
+      <div style="height:1px;background:linear-gradient(90deg,transparent,#fbbf24,transparent);margin:12px 0;"></div>
+      <div style="font-size:12px;color:#d4d4d8;">Powered by <b style="color:#fbbf24;">M³ Nexus</b></div>
+      <div style="font-size:11.5px;color:#fde68a;margin-top:3px;">Created by <b>Madhan Murali Mohan</b></div>
     </div>
   </div>
 
@@ -1054,7 +1067,7 @@
   (function() {
     var visitor = localStorage.getItem("m3_visitor_name") || "";
 
-    // 1. Auto-Fix Top Header Layout (Removes duplicate buttons & shows M³ Nexus + Both Names)
+    // Clean Header Layout (Fixes title clipping & removes floating blue icon overlap)
     function fixTopHeader() {
       var topBar = document.querySelector(".top");
       if (!topBar) return;
@@ -1063,14 +1076,14 @@
         nextEl.remove();
       }
       var pCntHtml = document.getElementById("pCnt") ? document.getElementById("pCnt").outerHTML : '<span id="pCnt" style="background:#18181b;color:#fbbf24;border:1px solid #fbbf24;border-radius:10px;padding:2px 6px;font-size:10px;font-weight:bold;white-space:nowrap;">⚡ 0</span>';
-      topBar.style.cssText = "display:flex;justify-content:space-between;align-items:center;gap:6px;padding:8px 10px;background:#111114;border-bottom:1px solid #27272a;";
+      topBar.style.cssText = "display:flex;justify-content:space-between;align-items:center;gap:6px;padding:8px 10px;background:#111114;border-bottom:1px solid #27272a;position:relative;z-index:20;";
       topBar.innerHTML =
         '<div style="display:flex;align-items:center;gap:6px;min-width:0;flex:1;">' +
           pCntHtml +
           '<button class="btn" id="menuBtn" style="flex-shrink:0;">&#9776;</button>' +
           '<div style="min-width:0;line-height:1.15;">' +
-            '<div style="font-size:16px;font-weight:800;color:#fbbf24;white-space:nowrap;">M<sup>3</sup> Nexus</div>' +
-            '<div style="font-size:9.5px;color:#a1a1aa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">By <b style="color:#fde68a;">Madhan Murali Mohan</b> • <span id="hdrGuest" style="color:#38bdf8;font-weight:700;cursor:pointer;" onclick="openM3Welcome()">' + (visitor || "Guest") + '</span></div>' +
+            '<div style="font-size:16px;font-weight:900;color:#fbbf24;white-space:nowrap;">M<sup>3</sup> Nexus</div>' +
+            '<div style="font-size:9.5px;color:#a1a1aa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">By <b style="color:#fde68a;">Madhan Murali Mohan</b> • <span id="hdrGuest" style="color:#38bdf8;font-weight:700;cursor:pointer;" onclick="openM3Welcome()">' + (visitor || "Set Name") + '</span></div>' +
           '</div>' +
         '</div>' +
         '<div style="display:flex;gap:4px;flex-shrink:0;">' +
@@ -1080,6 +1093,18 @@
         '</div>';
     }
     fixTopHeader();
+
+    function playRoyalSplash(name) {
+      var splash = document.getElementById("m3RoyalSplash");
+      var uEl = document.getElementById("m3SplashUser");
+      if (!splash || !uEl) return;
+      uEl.textContent = name;
+      splash.classList.remove("m3-splash-anim");
+      splash.style.display = "flex";
+      void splash.offsetWidth;
+      splash.classList.add("m3-splash-anim");
+      setTimeout(function() { splash.style.display = "none"; }, 2750);
+    }
 
     window.openM3Welcome = function() {
       var inp = document.getElementById("m3VisitorInp");
@@ -1095,11 +1120,15 @@
       var lbl = document.getElementById("hdrGuest");
       if (lbl) lbl.textContent = visitor;
       document.getElementById("m3WelcomeModal").style.display = "none";
+
+      // Trigger Cinematic Welcome Animation
+      playRoyalSplash(visitor);
+
       var chat = document.getElementById("chat");
       if (chat) {
         var greet = document.createElement("div");
-        greet.style.cssText = "background:#141417;border:1px solid #fbbf24;border-left:4px solid #fbbf24;padding:12px;border-radius:14px;margin:8px 0;font-size:13.5px;color:#f4f4f5;";
-        greet.innerHTML = "🐎 <b>Welcome " + visitor + "!</b><br>I am <b>M³ Nexus AI</b>, created by <b>Madhan Murali Mohan</b>. How can I help you today?";
+        greet.style.cssText = "background:#141417;border:1px solid #fbbf24;border-left:4px solid #fbbf24;padding:12px;border-radius:14px;margin:8px 0;font-size:13.5px;color:#f4f4f5;animation:m3PopIn 0.4s ease;";
+        greet.innerHTML = "🐎 <b>Welcome " + visitor + "!</b><br>I am <b>M³ Nexus AI</b>, created by <b>Madhan Murali Mohan</b>. Ask me anything!";
         chat.appendChild(greet);
         chat.scrollTop = chat.scrollHeight;
       }
@@ -1107,9 +1136,10 @@
 
     if (!visitor) {
       document.getElementById("m3WelcomeModal").style.display = "flex";
+    } else {
+      playRoyalSplash(visitor);
     }
 
-    // 2. Auto-Scroll Observer
     var chatEl = document.getElementById("chat");
     if (chatEl) {
       var obs = new MutationObserver(function() {
@@ -1118,7 +1148,6 @@
       obs.observe(chatEl, { childList: true, subtree: true, characterData: true });
     }
 
-    // 3. Track Uploaded Photo for Photo-to-Photo / Celebrity Merging
     var lastUploadedPhoto = null;
     var fileIn = document.getElementById("fileIn");
     if (fileIn) {
@@ -1131,10 +1160,17 @@
       });
     }
 
-    // 4. Horse Gallop Loader + Personalize Name + Smart Photo Engine
+    function extractPureQuestion(rawMsg) {
+      if (!rawMsg) return "";
+      var askIdx = rawMsg.lastIndexOf("Ask:");
+      if (askIdx !== -1) return rawMsg.slice(askIdx + 4).trim();
+      return rawMsg.replace(/\[System[\s\S]*?\]\s*/g, "").trim();
+    }
+
     var baseFetch = window.fetch;
     window.fetch = async function(url, opts) {
-      var isBackend = typeof url === "string" && url.indexOf("onrender.com") !== -1;
+      var urlStr = typeof url === "string" ? url : "";
+      var isBackend = urlStr.indexOf("onrender.com") !== -1;
       var horseLoader = null;
 
       if (isBackend && chatEl) {
@@ -1147,31 +1183,44 @@
         try {
           if (opts && opts.body && typeof opts.body === "string") {
             var payload = JSON.parse(opts.body);
-            var userMsg = payload.message || "";
+            var rawMessage = payload.message || "";
+            var pureAsk = extractPureQuestion(rawMessage);
             var vName = visitor || "Friend";
 
-            payload.message = "[System Context: M3 Nexus AI was created by Madhan Murali Mohan. Current user name is '" + vName + "'. Address the user as '" + vName + "'.]\n\n" + userMsg;
-            opts.body = JSON.stringify(payload);
+            var isPhotoAction = lastUploadedPhoto || /\b(pic|photo|image|picture|beautiful|nature|4k|celebrity|kohli|prabhas|mahesh|beside|with|edit|waterfall|background|hd)\b/i.test(pureAsk);
 
-            var isPhotoEdit = lastUploadedPhoto && /\b(beautiful|nature|4k|celebrity|kohli|prabhas|mahesh|beside|with|edit|waterfall|background|hd)\b/i.test(userMsg);
-            if (isPhotoEdit) {
+            if (isPhotoAction && (lastUploadedPhoto || /\b(beside|kohli|prabhas|mahesh|celebrity|pic|photo|image)\b/i.test(pureAsk))) {
               var savedPhoto = lastUploadedPhoto;
               lastUploadedPhoto = null;
 
-              payload.message = "Describe the person in the attached photo in 30 words (gender, age, face, hair, outfit) and combine it seamlessly with: '" + userMsg + "'. Output ONLY a single ultra-realistic 8K photography prompt.";
-              opts.body = JSON.stringify(payload);
+              if (savedPhoto && !/\b(beside|kohli|prabhas|mahesh|celebrity|hero|actor|cricketer|stadium)\b/i.test(pureAsk)) {
+                if (horseLoader) horseLoader.remove();
+                renderReal4KPhotoCard(savedPhoto, pureAsk || "4K Studio Portrait Enhancement");
+                return new Response(JSON.stringify({ reply: "🐎 Here is your **Real 4K Studio Enhanced** photo, **" + vName + "**!" }), {
+                  status: 200, headers: { "Content-Type": "application/json" }
+                });
+              }
 
-              var vRes = await baseFetch.apply(this, arguments);
-              var vData = await vRes.clone().json().catch(function() { return {}; });
+              var scenePrompt = pureAsk;
+              if (savedPhoto) {
+                payload.message = "Look at the attached photo. Describe the person's exact face, age, skin tone, hair, and outfit in 25 words, and place them standing right beside " + pureAsk + ". Output ONLY a clean photorealistic DSLR prompt.";
+                opts.body = JSON.stringify(payload);
+                var vRes = await baseFetch.apply(this, arguments);
+                var vData = await vRes.clone().json().catch(function() { return {}; });
+                var aiDesc = (vData.reply || vData.response || vData.text || "").replace(/\[.*?\]/g, "").trim();
+                if (aiDesc && aiDesc.length > 15) scenePrompt = aiDesc;
+              }
+
               if (horseLoader) horseLoader.remove();
+              generateViaStableHorde(scenePrompt, pureAsk || "Celebrity Studio Photo");
 
-              var mergedPrompt = (vData.reply || vData.response || vData.text || ("Young Indian person, " + userMsg)) + ", 8k resolution, DSLR photography, natural lighting, sharp focus";
-              renderSmartImageCard(mergedPrompt, savedPhoto, userMsg);
-
-              return new Response(JSON.stringify({ reply: "🐎 Here is your 4K transformation, **" + vName + "**!" }), {
+              return new Response(JSON.stringify({ reply: "🐎 Generating your custom AI studio photo for **" + vName + "**..." }), {
                 status: 200, headers: { "Content-Type": "application/json" }
               });
             }
+
+            payload.message = "[System Identity: M3 Nexus AI was created by Madhan Murali Mohan. Current user is '" + vName + "'. Address user as '" + vName + "'.]\n\n" + rawMessage;
+            opts.body = JSON.stringify(payload);
           }
         } catch (err) {}
       }
@@ -1187,56 +1236,115 @@
       }
     };
 
-    function renderSmartImageCard(prompt, originalBase64, label) {
+    function renderReal4KPhotoCard(base64Img, cleanTitle) {
       if (!chatEl) return;
-      var enc = encodeURIComponent(prompt.slice(0, 450));
-      var seed = Math.floor(Math.random() * 999999);
-      var servers = [
-        "https://image.pollinations.ai/prompt/" + enc + "?width=1024&height=1024&seed=" + seed + "&model=flux&nologo=true",
-        "https://image.pollinations.ai/prompt/" + enc + "?width=1024&height=1024&seed=" + (seed + 7) + "&model=turbo&nologo=true"
-      ];
-
+      var uid = "real4k_" + Date.now();
       var wrap = document.createElement("div");
-      wrap.style.cssText = "background:#141417;border:1px solid #fbbf24;border-radius:14px;padding:10px;margin:8px 0;max-width:88%;";
-      wrap.innerHTML = '<div style="font-size:12px;color:#fbbf24;font-weight:700;margin-bottom:6px;">🐎 M³ Nexus 4K Studio: ' + label + '</div>' +
-        '<img id="m3Img_' + seed + '" src="' + servers[0] + '" style="width:100%;border-radius:10px;display:block;" />' +
+      wrap.style.cssText = "background:#141417;border:1.5px solid #fbbf24;border-radius:14px;padding:10px;margin:8px 0;max-width:88%;";
+      wrap.innerHTML =
+        '<div style="font-size:12px;color:#fbbf24;font-weight:700;margin-bottom:6px;">🐎 M³ Nexus 4K Studio: ' + cleanTitle + '</div>' +
+        '<img id="' + uid + '" style="width:100%;border-radius:10px;display:block;" />' +
         '<div style="display:flex;gap:8px;margin-top:8px;">' +
-        '<button onclick="dlM3Img(\'m3Img_' + seed + '\')" style="background:#fbbf24;color:#000;border:none;padding:5px 10px;border-radius:8px;font-weight:800;font-size:11px;cursor:pointer;">Save 4K HD 📥</button>' +
+        '<button onclick="dlM3Img(\'' + uid + '\')" style="background:#fbbf24;color:#000;border:none;padding:6px 12px;border-radius:8px;font-weight:800;font-size:11.5px;cursor:pointer;">Save 4K HD 📥</button>' +
+        '</div>';
+      chatEl.appendChild(wrap);
+
+      var im = new Image();
+      im.onload = function() {
+        var c = document.createElement("canvas");
+        c.width = im.width; c.height = im.height;
+        var ctx = c.getContext("2d");
+        ctx.filter = "contrast(1.14) saturate(1.22) brightness(1.05)";
+        ctx.drawImage(im, 0, 0);
+        var grad = ctx.createRadialGradient(c.width/2, c.height/2, c.width*0.3, c.width/2, c.height/2, c.width*0.75);
+        grad.addColorStop(0, "rgba(255,235,180,0.04)");
+        grad.addColorStop(1, "rgba(0,0,0,0.28)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, c.width, c.height);
+
+        var outEl = document.getElementById(uid);
+        if (outEl) outEl.src = c.toDataURL("image/png");
+        chatEl.scrollTop = chatEl.scrollHeight;
+      };
+      im.src = base64Img;
+    }
+
+    async function generateViaStableHorde(prompt, cleanLabel) {
+      if (!chatEl) return;
+      var uid = "shImg_" + Date.now();
+      var wrap = document.createElement("div");
+      wrap.style.cssText = "background:#141417;border:1.5px solid #fbbf24;border-radius:14px;padding:10px;margin:8px 0;max-width:88%;";
+      wrap.innerHTML =
+        '<div id="' + uid + '_st" style="font-size:12px;color:#fbbf24;font-weight:700;margin-bottom:6px;">🐎 Creating 4K Visual: ' + cleanLabel + ' (Please wait ~10s)...</div>' +
+        '<img id="' + uid + '" style="width:100%;border-radius:10px;display:none;" />' +
+        '<div id="' + uid + '_act" style="display:none;gap:8px;margin-top:8px;">' +
+        '<button onclick="dlM3Img(\'' + uid + '\')" style="background:#fbbf24;color:#000;border:none;padding:6px 12px;border-radius:8px;font-weight:800;font-size:11.5px;cursor:pointer;">Save 4K HD 📥</button>' +
         '</div>';
       chatEl.appendChild(wrap);
       chatEl.scrollTop = chatEl.scrollHeight;
 
-      var imgEl = document.getElementById("m3Img_" + seed);
-      var idx = 0;
-      imgEl.onload = function() { chatEl.scrollTop = chatEl.scrollHeight; };
-      imgEl.onerror = function() {
-        idx++;
-        if (idx < servers.length) {
-          imgEl.src = servers[idx];
-        } else if (originalBase64) {
-          var c = document.createElement("canvas");
-          var im = new Image();
-          im.onload = function() {
-            c.width = im.width; c.height = im.height;
-            var ctx = c.getContext("2d");
-            ctx.filter = "contrast(1.14) saturate(1.2) brightness(1.05)";
-            ctx.drawImage(im, 0, 0);
-            imgEl.src = c.toDataURL("image/png");
-          };
-          im.src = originalBase64;
+      var stEl = document.getElementById(uid + "_st");
+      var imgEl = document.getElementById(uid);
+      var actEl = document.getElementById(uid + "_act");
+
+      try {
+        var fullPrompt = prompt + ", photorealistic, 8k uhd, dslr, natural lighting, sharp focus, masterpiece";
+        var subRes = await baseFetch("https://stablehorde.net/api/v2/generate/async", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "apikey": "0000000000" },
+          body: JSON.stringify({
+            prompt: fullPrompt,
+            params: { width: 512, height: 512, steps: 22, sampler_name: "k_euler_a" },
+            models: ["Deliberate", "Realistic Vision", "stable_diffusion"]
+          })
+        });
+        var job = await subRes.json();
+        if (!job.id) throw new Error("Queue busy");
+
+        for (var i = 0; i < 20; i++) {
+          await new Promise(function(r) { setTimeout(r, 2000); });
+          var chk = await baseFetch("https://stablehorde.net/api/v2/generate/status/" + job.id);
+          var data = await chk.json();
+          if (data.done && data.generations && data.generations[0]) {
+            imgEl.src = data.generations[0].img;
+            imgEl.style.display = "block";
+            actEl.style.display = "flex";
+            stEl.textContent = "🐎 M³ Nexus 4K Studio: " + cleanLabel;
+            chatEl.scrollTop = chatEl.scrollHeight;
+            return;
+          }
         }
-      };
+        stEl.textContent = "⚠️ GPU server took too long, tap Send again!";
+      } catch (e) {
+        stEl.textContent = "⚠️ Studio queue busy right now, please try again in 5 seconds!";
+      }
     }
 
     window.dlM3Img = function(id) {
       var im = document.getElementById(id);
-      if (!im) return;
+      if (!im || !im.src) return;
       var a = document.createElement("a");
       a.href = im.src;
       a.download = "M3_Nexus_4K_" + Date.now() + ".png";
       a.click();
     };
   })();
-  </script>
+        </script>
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+
+      
+    
+
+    
+
+  
 </body>
 </html> 
