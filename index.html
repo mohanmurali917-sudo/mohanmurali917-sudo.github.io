@@ -1010,78 +1010,79 @@
     </script> 
 
       
-          
-  // Free Hugging Face Face-Preserving Image-to-Image Engine (Zero Billing Needed!)
-    async function runGoogleNativeImageEdit(base64DataUrl, mimeType, userPrompt) {
-      if (!chatEl) return;
-      var uid = "gImg_" + Date.now();
-      var wrap = document.createElement("div");
-      wrap.style.cssText = "background:#141417;border:1.5px solid #fbbf24;border-radius:14px;padding:10px;margin:8px 0;max-width:88%;";
-      wrap.innerHTML =
-        '<div id="' + uid + '_st" style="font-size:12px;color:#fbbf24;font-weight:700;margin-bottom:6px;">🐎 M³ Full HD Studio: Preserving faces & rendering...</div>' +
-        '<img id="' + uid + '" style="width:100%;border-radius:10px;display:none;" />' +
-        '<div id="' + uid + '_act" style="display:none;gap:8px;margin-top:8px;">' +
-        '<button onclick="dlM3Img(\'' + uid + '\')" style="background:#fbbf24;color:#000;border:none;padding:6px 12px;border-radius:8px;font-weight:800;font-size:11.5px;cursor:pointer;">Save Full HD 📥</button>' +
-        '</div>';
-      chatEl.appendChild(wrap);
-      chatEl.scrollTop = chatEl.scrollHeight;
+ <style>
+    @keyframes m3Gallop { 0% { transform: translateX(0) rotate(-6deg); } 100% { transform: translateX(8px) rotate(8deg) scale(1.12); } }
+    @keyframes m3PopIn { from { opacity: 0; transform: scale(0.88) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    @keyframes m3Shine { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+    @keyframes m3FadeOut { 0% { opacity: 1; transform: scale(1); } 80% { opacity: 1; transform: scale(1.03); } 100% { opacity: 0; transform: scale(1.08); pointer-events: none; } }
 
-      var stEl = document.getElementById(uid + "_st");
-      var imgEl = document.getElementById(uid);
-      var actEl = document.getElementById(uid + "_act");
+    #m3WelcomeModal, #m3RoyalSplash, #m3SqlModal {
+      display: none; position: fixed; inset: 0; z-index: 999999;
+      background: radial-gradient(circle at top, #271f0e 0%, #09090b 85%);
+      align-items: center; justify-content: center; padding: 16px;
+    }
+    .m3-w-card {
+      background: #121216; border: 1.5px solid #fbbf24; border-radius: 24px;
+      padding: 24px 18px; max-width: 400px; width: 100%; text-align: center;
+      box-shadow: 0 0 40px rgba(251, 191, 36, 0.3); animation: m3PopIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .m3-gold-shine {
+      background: linear-gradient(90deg, #fbbf24, #fffbeb, #f59e0b, #fbbf24);
+      background-size: 200% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: m3Shine 2.4s linear infinite;
+    }
+    .m3-splash-anim { animation: m3FadeOut 2.8s forwards ease-in-out; }
+    .m3-horse-bar {
+      display: flex; align-items: center; gap: 10px; padding: 11px 14px; margin: 8px 0;
+      background: #141418; border: 1px solid #fbbf24; border-radius: 14px;
+      color: #fbbf24; font-size: 13px; font-weight: 700; max-width: 85%;
+    }
+    .m3-horse-run { font-size: 22px; display: inline-block; animation: m3Gallop 0.45s infinite alternate ease-in-out; }
+    .m3-chip-btn {
+      background: #18181b; color: #fbbf24; border: 1px solid #fbbf24;
+      padding: 6px 11px; border-radius: 20px; font-size: 11.5px; font-weight: 700;
+      cursor: pointer; white-space: nowrap; flex-shrink: 0;
+    }
+  </style>
 
-      try {
-        if (!studioKey || studioKey.indexOf("hf_") !== 0) {
-          openM3KeyModal();
-          throw new Error("Paste a free Hugging Face Token (hf_...) in 🔑 Key for 100% Free Image Editing!");
-        }
+  <!-- Step 1: Name Entry Modal -->
+  <div id="m3WelcomeModal">
+    <div class="m3-w-card">
+      <div style="font-size:42px;margin-bottom:6px;animation:m3Gallop 0.6s infinite alternate;">🐎👑</div>
+      <div class="m3-gold-shine" style="font-size:25px;font-weight:900;">M<sup>3</sup> Nexus AI</div>
+      <div style="font-size:12px;color:#fde68a;margin:4px 0 16px;">Architected by <b>Madhan Murali Mohan</b></div>
+      <p style="font-size:12.5px;color:#a1a1aa;margin-bottom:12px;">Enter your name to unlock your Royal AI Workspace:</p>
+      <input id="m3VisitorInp" type="text" placeholder="Type your name..." style="width:100%;padding:12px;border-radius:12px;border:1.5px solid #fbbf24;background:#18181b;color:#fff;font-size:14.5px;text-align:center;outline:none;margin-bottom:14px;" />
+      <button onclick="saveM3Visitor()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#fbbf24,#d97706);color:#000;font-weight:900;font-size:14.5px;cursor:pointer;">Enter Royal Workspace 🐎</button>
+    </div>
+  </div>
 
-        var fullPrompt = "Keep the exact faces, facial features, expressions, and identities of the people in this photo completely unchanged. " + userPrompt + ", ultra-realistic DSLR photography, 8k full HD, cinematic stadium lighting, natural skin texture";
-        var resp;
+  <!-- Step 2: Cinematic Dual-Name Welcome Animation -->
+  <div id="m3RoyalSplash">
+    <div class="m3-w-card" style="border-width:2px;">
+      <div style="font-size:48px;margin-bottom:8px;animation:m3Gallop 0.45s infinite alternate;">🐎✨</div>
+      <div style="font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#fde68a;font-weight:700;">Welcome</div>
+      <div id="m3SplashUser" class="m3-gold-shine" style="font-size:28px;font-weight:900;margin:6px 0;">Guest</div>
+      <div style="height:1px;background:linear-gradient(90deg,transparent,#fbbf24,transparent);margin:12px 0;"></div>
+      <div style="font-size:12px;color:#d4d4d8;">Powered by <b style="color:#fbbf24;">M³ Nexus</b></div>
+      <div style="font-size:11.5px;color:#fde68a;margin-top:3px;">Created by <b>Madhan Murali Mohan</b></div>
+    </div>
+  </div>
 
-        if (base64DataUrl) {
-          var pureB64 = base64DataUrl.split(",")[1];
-          resp = await baseFetch("https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-Kontext-dev", {
-            method: "POST",
-            headers: {
-              "Authorization": "Bearer " + studioKey,
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              inputs: pureB64,
-              parameters: { prompt: fullPrompt }
-            })
-          });
-        } else {
-          resp = await baseFetch("https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-dev", {
-            method: "POST",
-            headers: {
-              "Authorization": "Bearer " + studioKey,
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ inputs: fullPrompt })
-          });
-        }
-
-        if (!resp.ok) {
-          var errTxt = await resp.text();
-          throw new Error("HF Studio (" + resp.status + "): " + errTxt.slice(0, 120));
-        }
-
-        var blob = await resp.blob();
-        var blobUrl = URL.createObjectURL(blob);
-        imgEl.src = blobUrl;
-        imgEl.style.display = "block";
-        actEl.style.display = "flex";
-        stEl.textContent = "🐎 M³ Nexus Full HD Studio: " + userPrompt;
-        chatEl.scrollTop = chatEl.scrollHeight;
-      } catch (err) {
-        stEl.innerHTML = "⚠️ " + (err.message || "Error") + " — <span style='text-decoration:underline;cursor:pointer;' onclick='openM3KeyModal()'>Update 🔑 Key</span>";
-      }
-    }     
+  <!-- Step 3: Instant SQL / Data to Graph Modal (Zero API Key) -->
+  <div id="m3SqlModal">
+    <div class="m3-w-card" style="text-align:left;">
+      <div style="text-align:center;margin-bottom:10px;">
+        <div style="font-size:30px;">📊✨</div>
+        <div style="font-size:18px;font-weight:900;color:#fbbf24;">M³ SQL & Data Graph Studio</div>
+        <div style="font-size:11px;color:#a1a1aa;">Paste SQL INSERT / SELECT values or Label:Number pairs</div>
+      </div>
+      <textarea id="m3SqlInput" rows="5" placeholder="Example:&#10;Jan: 120, Feb: 250, Mar: 190, Apr: 340&#10;OR&#10;INSERT INTO sales VALUES ('Kohli', 183), ('Rohit', 264), ('Dhoni', 183);" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid #fbbf24;background:#18181b;color:#fff;font-size:12.5px;outline:none;margin-bottom:10px;font-family:monospace;"></textarea>
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <select id="m3ChartType" style="flex:1;padding:10px;border-radius:10px;         
       
 
-                
   
 </body> 
 </html> 
