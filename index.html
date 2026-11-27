@@ -1083,6 +1083,69 @@
         <select id="m3ChartType" style="flex:1;padding:10px;border-radius:10px;         
       
 
-  
+  <style>
+@keyframes madHorseRun {
+  0% { transform: translateY(0px) rotate(-6deg) scale(1); }
+  100% { transform: translateY(-7px) rotate(8deg) scale(1.08); }
+}
+.horse-anim {
+  display: inline-block;
+  font-size: 28px;
+  animation: madHorseRun 0.45s infinite alternate ease-in-out;
+}
+#m3PermanentWelcome {
+  padding: 14px 16px;
+  margin: 10px;
+  border-radius: 14px;
+  background: #141417;
+  border: 1px solid #fbbf24;
+  color: #f4f4f5;
+  font-weight: 600;
+}
+</style>
+
+<script>
+(function () {
+  function cleanBrackets(str) {
+    return String(str || "").replace(/\}\]/g, "");
+  }
+
+  if (typeof window.fmt === "function") {
+    const oldFmt = window.fmt;
+    window.fmt = function (raw) {
+      return oldFmt(cleanBrackets(raw));
+    };
+  }
+
+  if (typeof window.addMsg === "function") {
+    const oldAddMsg = window.addMsg;
+    window.addMsg = function (t, y, img, sf, idx, pin) {
+      let msgText = typeof t === "string" ? cleanBrackets(t) : t;
+      if (typeof msgText === "string" && (msgText.includes("Thinking") || msgText.includes("🐎"))) {
+        msgText = `<div style="display:flex;align-items:center;gap:10px;color:#fbbf24;font-weight:800;"><span class="horse-anim">🐎</span><span>M3 Nexus is galloping...</span></div>`;
+      }
+      const res = oldAddMsg.call(this, msgText, y, img, sf, idx, pin);
+      if (res && res.box && typeof msgText === "string" && msgText.includes("horse-anim")) {
+        res.box.innerHTML = msgText;
+      }
+      return res;
+    };
+  }
+
+  function ensureWelcome() {
+    const chat = document.getElementById("chat");
+    if (!chat) return;
+    if (chat.children.length === 0 && !document.getElementById("m3PermanentWelcome")) {
+      const w = document.createElement("div");
+      w.id = "m3PermanentWelcome";
+      w.innerHTML = `<div style="display:flex;align-items:center;gap:10px;"><span class="horse-anim">🐎</span><div><div style="color:#fbbf24;font-size:1.05rem;">Welcome to M³ Nexus</div><div style="font-size:0.85rem;color:#d4d4d8;">Ask anything or start a new chat anytime.</div></div></div>`;
+      chat.appendChild(w);
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", ensureWelcome);
+  setInterval(ensureWelcome, 1500);
+})();
+</script>
 </body> 
 </html> 
