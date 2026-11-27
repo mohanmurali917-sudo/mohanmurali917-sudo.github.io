@@ -1167,6 +1167,79 @@
   window.addEventListener("DOMContentLoaded", showHorse);
   setInterval(showHorse, 800);
 })();
-</script>
+<script> 
+  <style>
+  .m3-tools-box {
+    max-width: 720px;
+    margin: 14px auto;
+    padding: 16px;
+    background: #141417;
+    border: 1px solid #fbbf24;
+    border-radius: 16px;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #f4f4f5;
+  }
+  .m3-tools-title {
+    color: #fbbf24;
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .m3-tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+  }
+  .m3-tool-card {
+    display: block;
+    text-decoration: none;
+    background: #18181b;
+    border: 1px solid #3f3f46;
+    border-radius: 12px;
+    padding: 12px;
+    color: #f4f4f5;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .m3-tool-card:hover {
+    transform: translateY(-2px);
+    border-color: #fbbf24;
+  }
+  .m3-tool-name {
+    color: #fbbf24;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+  }
+  .m3-tool-desc {
+    font-size: 0.78rem;
+    color: #a1a1aa;
+    line-height: 1.35;
+  }
+</style>
+
+<div class="m3-tools-box">
+  <div class="m3-tools-title">🚀 M³ Nexus — 4 Unique AI & Automation Tools</div>
+  <div class="m3-tools-grid">
+    <a class="m3-tool-card" href="https://www.perplexity.ai" target="_blank" rel="noopener">
+      <div class="m3-tool-name">🔍 Perplexity AI</div>
+      <div class="m3-tool-desc">Live web research & verified answers with sources.</div>
+    </a>
+    <a class="m3-tool-card" href="https://huggingface.co/spaces" target="_blank" rel="noopener">
+      <div class="m3-tool-name">🤗 Hugging Face</div>
+      <div class="m3-tool-desc">Open-source AI demos for image, audio & code.</div>
+    </a>
+    <a class="m3-tool-card" href="https://elevenlabs.io" target="_blank" rel="noopener">
+      <div class="m3-tool-name">🎙️ ElevenLabs</div>
+      <div class="m3-tool-desc">Ultra-realistic AI voice & audio generator.</div>
+    </a>
+    <a class="m3-tool-card" href="https://n8n.io" target="_blank" rel="noopener">
+      <div class="m3-tool-name">⚡ n8n Automation</div>
+      <div class="m3-tool-desc">Connect apps & build smart AI workflows easily.</div>
+    </a>
+  </div>
+</div>
 </body> 
 </html> 
