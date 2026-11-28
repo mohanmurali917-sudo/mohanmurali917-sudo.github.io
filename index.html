@@ -1005,7 +1005,11 @@
         return prevFetch.apply(this, arguments);
       };
     })();
-      if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+      if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function(regs) {
+    regs.forEach(function(r) { r.unregister(); });
+  });
+      
       
     </script> 
 
@@ -1026,7 +1030,7 @@
       padding: 24px 18px; max-width: 400px; width: 100%; text-align: center;
       box-shadow: 0 0 40px rgba(251, 191, 36, 0.3); animation: m3PopIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .m3-gold-shine {
+    
       
   
 
