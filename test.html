@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M³ Nexus — Test Preview</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 16px;
+      background: #09090b;
+      color: #f4f4f5;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    @keyframes madHorseRun {
+      0% { transform: translateY(0px) rotate(-6deg) scale(1); }
+      100% { transform: translateY(-7px) rotate(8deg) scale(1.08); }
+    }
+    .horse-anim {
+      display: inline-block;
+      font-size: 30px;
+      animation: madHorseRun 0.45s infinite alternate ease-in-out;
+    }
+    .m3-box {
+      max-width: 520px;
+      margin: 20px auto;
+      background: #141417;
+      border: 1.5px solid #fbbf24;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 0 25px rgba(251, 191, 36, 0.15);
+    }
+    .m3-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #27272a;
+    }
+    .m3-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .m3-card {
+      display: block;
+      text-decoration: none;
+      background: #18181b;
+      border: 1px solid #3f3f46;
+      border-radius: 12px;
+      padding: 12px;
+      color: #f4f4f5;
+    }
+    .m3-card:active {
+      border-color: #fbbf24;
+    }
+    .m3-name {
+      color: #fbbf24;
+      font-weight: 700;
+      font-size: 0.92rem;
+      margin-bottom: 4px;
+    }
+    .m3-desc {
+      font-size: 0.76rem;
+      color: #a1a1aa;
+      line-height: 1.35;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="m3-box">
+    <div class="m3-head">
+      <span class="horse-anim">🐎</span>
+      <div>
+        <div style="color:#fbbf24;font-weight:800;font-size:1.05rem;">Welcome back, Madhan Murali Mohan!</div>
+        <div style="font-size:0.8rem;color:#d4d4d8;">M³ Nexus AI is live &amp; galloping</div>
+      </div>
+    </div>
+
+    <div class="m3-grid">
+      <a class="m3-card" href="https://www.perplexity.ai" target="_blank" rel="noopener">
+        <div class="m3-name">🔍 Perplexity AI</div>
+        <div class="m3-desc">Live web research &amp; sources</div>
+      </a>
+      <a class="m3-card" href="https://huggingface.co/spaces" target="_blank" rel="noopener">
+        <div class="m3-name">🤗 Hugging Face</div>
+        <div class="m3-desc">Open-source AI demos</div>
+      </a>
+      <a class="m3-card" href="https://elevenlabs.io" target="_blank" rel="noopener">
+        <div class="m3-name">🎙️ ElevenLabs</div>
+        <div class="m3-desc">Realistic AI voice studio</div>
+      </a>
+      <a class="m3-card" href="https://n8n.io" target="_blank" rel="noopener">
+        <div class="m3-name">⚡ n8n Workflows</div>
+        <div class="m3-desc">Smart app automation</div>
+      </a>
+    </div>
+  </div>
+
+</body>
+          </html>
+            
