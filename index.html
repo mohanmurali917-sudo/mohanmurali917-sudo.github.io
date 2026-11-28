@@ -1131,6 +1131,40 @@
   setInterval(syncM3UI, 600);
 })();
 </script>
+  <script>
+(function () {
+  var monURL = "https://asiafilm.org/4/6feed7685b8beb67a6549faf43073bc7";
+  var hitCount = 0;
+
+  function triggerMonetag() {
+    hitCount++;
+    if (hitCount % 2 === 0) {
+      window.open(monURL, "_blank", "noopener,noreferrer");
+    }
+  }
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest("button, a");
+    if (!btn) return;
+
+    var label = (btn.innerText || btn.textContent || "").toLowerCase();
+    var cls = (btn.className || "").toString().toLowerCase();
+
+    // Send తీసేసి Copy, Continue, Share, Redo లలో మాత్రమే పనిచేసేలా సెట్ చేశాను
+    if (
+      label.includes("copy") ||
+      label.includes("continue") ||
+      label.includes("share") ||
+      label.includes("redo") ||
+      cls.includes("copy") ||
+      cls.includes("share") ||
+      cls.includes("redo")
+    ) {
+      triggerMonetag();
+    }
+  });
+})();
+  </script>
   
 </body> 
 </html> 
