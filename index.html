@@ -254,7 +254,7 @@
       
       var msg = "Profile: "+bio+NL+mInst+(hist ? "Chat:"+NL+hist+NL : "")+(docCtx ? "Doc:"+NL+docCtx+NL : "")+"Ask: "+disp;
       var sI = imgB64, sM = imgMime; $("inp").value = ""; grow(); imgB64 = imgPrev = docCtx = null; pill("", ""); $("sendBtn").disabled = true;
-      var ld = addMsg("Thinking...", "ai");
+      var ld = addMsg('<span class="horse-anim">🐎</span> M³ Nexus is galloping...', "ai");
       try {
         var res = await fetch(API + "/chat", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({message: msg, image: sI, mimeType: sM}) });
         var d = await res.json(), rep = d.reply || ("Error: " + (d.error || "No reply"));
