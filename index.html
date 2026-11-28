@@ -1027,219 +1027,134 @@
       box-shadow: 0 0 40px rgba(251, 191, 36, 0.3); animation: m3PopIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .m3-gold-shine {
-      background: linear-gradient(90deg, #fbbf24, #fffbeb, #f59e0b, #fbbf24);
-      background-size: 200% auto;
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      animation: m3Shine 2.4s linear infinite;
-    }
-    .m3-splash-anim { animation: m3FadeOut 2.8s forwards ease-in-out; }
-    .m3-horse-bar {
-      display: flex; align-items: center; gap: 10px; padding: 11px 14px; margin: 8px 0;
-      background: #141418; border: 1px solid #fbbf24; border-radius: 14px;
-      color: #fbbf24; font-size: 13px; font-weight: 700; max-width: 85%;
-    }
-    .m3-horse-run { font-size: 22px; display: inline-block; animation: m3Gallop 0.45s infinite alternate ease-in-out; }
-    .m3-chip-btn {
-      background: #18181b; color: #fbbf24; border: 1px solid #fbbf24;
-      padding: 6px 11px; border-radius: 20px; font-size: 11.5px; font-weight: 700;
-      cursor: pointer; white-space: nowrap; flex-shrink: 0;
-    }
-  </style>
-
-  <!-- Step 1: Name Entry Modal -->
-  <div id="m3WelcomeModal">
-    <div class="m3-w-card">
-      <div style="font-size:42px;margin-bottom:6px;animation:m3Gallop 0.6s infinite alternate;">🐎👑</div>
-      <div class="m3-gold-shine" style="font-size:25px;font-weight:900;">M<sup>3</sup> Nexus AI</div>
-      <div style="font-size:12px;color:#fde68a;margin:4px 0 16px;">Architected by <b>Madhan Murali Mohan</b></div>
-      <p style="font-size:12.5px;color:#a1a1aa;margin-bottom:12px;">Enter your name to unlock your Royal AI Workspace:</p>
-      <input id="m3VisitorInp" type="text" placeholder="Type your name..." style="width:100%;padding:12px;border-radius:12px;border:1.5px solid #fbbf24;background:#18181b;color:#fff;font-size:14.5px;text-align:center;outline:none;margin-bottom:14px;" />
-      <button onclick="saveM3Visitor()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#fbbf24,#d97706);color:#000;font-weight:900;font-size:14.5px;cursor:pointer;">Enter Royal Workspace 🐎</button>
-    </div>
-  </div>
-
-  <!-- Step 2: Cinematic Dual-Name Welcome Animation -->
-  <div id="m3RoyalSplash">
-    <div class="m3-w-card" style="border-width:2px;">
-      <div style="font-size:48px;margin-bottom:8px;animation:m3Gallop 0.45s infinite alternate;">🐎✨</div>
-      <div style="font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#fde68a;font-weight:700;">Welcome</div>
-      <div id="m3SplashUser" class="m3-gold-shine" style="font-size:28px;font-weight:900;margin:6px 0;">Guest</div>
-      <div style="height:1px;background:linear-gradient(90deg,transparent,#fbbf24,transparent);margin:12px 0;"></div>
-      <div style="font-size:12px;color:#d4d4d8;">Powered by <b style="color:#fbbf24;">M³ Nexus</b></div>
-      <div style="font-size:11.5px;color:#fde68a;margin-top:3px;">Created by <b>Madhan Murali Mohan</b></div>
-    </div>
-  </div>
-
-  <!-- Step 3: Instant SQL / Data to Graph Modal (Zero API Key) -->
-  <div id="m3SqlModal">
-    <div class="m3-w-card" style="text-align:left;">
-      <div style="text-align:center;margin-bottom:10px;">
-        <div style="font-size:30px;">📊✨</div>
-        <div style="font-size:18px;font-weight:900;color:#fbbf24;">M³ SQL & Data Graph Studio</div>
-        <div style="font-size:11px;color:#a1a1aa;">Paste SQL INSERT / SELECT values or Label:Number pairs</div>
-      </div>
-      <textarea id="m3SqlInput" rows="5" placeholder="Example:&#10;Jan: 120, Feb: 250, Mar: 190, Apr: 340&#10;OR&#10;INSERT INTO sales VALUES ('Kohli', 183), ('Rohit', 264), ('Dhoni', 183);" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid #fbbf24;background:#18181b;color:#fff;font-size:12.5px;outline:none;margin-bottom:10px;font-family:monospace;"></textarea>
-      <div style="display:flex;gap:8px;margin-bottom:12px;">
-        <select id="m3ChartType" style="flex:1;padding:10px;border-radius:10px;         
       
+  
 
-  <style>
-@keyframes madHorseRun {
-  0% { transform: translateY(0px) rotate(-6deg) scale(1); }
-  100% { transform: translateY(-7px) rotate(8deg) scale(1.08); }
-}
-.horse-anim {
-  display: inline-block;
-  font-size: 28px;
-  animation: madHorseRun 0.45s infinite alternate ease-in-out;
-}
-#m3PermanentWelcome {
-  padding: 14px 16px;
-  margin: 10px;
-  border-radius: 14px;
-  background: #141417;
-  border: 1px solid #fbbf24;
-  color: #f4f4f5;
-  font-weight: 600;
-}
-</style>
-
-<script>
-(function () {
-  function cleanBrackets(str) {
-    return String(str || "").replace(/\}\]/g, "");
+  
+    
+    
+<style>
+  @keyframes madHorseRun {
+    0% { transform: translateY(0px) rotate(-6deg) scale(1); }
+    100% { transform: translateY(-7px) rotate(8deg) scale(1.08); }
   }
-
-  if (typeof window.fmt === "function") {
-    const oldFmt = window.fmt;
-    window.fmt = function (raw) {
-      return oldFmt(cleanBrackets(raw));
-    };
+  .horse-anim {
+    display: inline-block;
+    font-size: 26px;
+    animation: madHorseRun 0.45s infinite alternate ease-in-out;
   }
-
-  if (typeof window.addMsg === "function") {
-    const oldAddMsg = window.addMsg;
-    window.addMsg = function (t, y, img, sf, idx, pin) {
-      let msgText = typeof t === "string" ? cleanBrackets(t) : t;
-      if (typeof msgText === "string" && (msgText.includes("Thinking") || msgText.includes("🐎"))) {
-        msgText = `<div style="display:flex;align-items:center;gap:10px;color:#fbbf24;font-weight:800;"><span class="horse-anim">🐎</span><span>M3 Nexus is galloping...</span></div>`;
-      }
-      const res = oldAddMsg.call(this, msgText, y, img, sf, idx, pin);
-      if (res && res.box && typeof msgText === "string" && msgText.includes("horse-anim")) {
-        res.box.innerHTML = msgText;
-      }
-      return res;
-    };
-  }
-
-  function ensureWelcome() {
-    const chat = document.getElementById("chat");
-    if (!chat) return;
-    if (chat.children.length === 0 && !document.getElementById("m3PermanentWelcome")) {
-      const w = document.createElement("div");
-      w.id = "m3PermanentWelcome";
-      w.innerHTML = `<div style="display:flex;align-items:center;gap:10px;"><span class="horse-anim">🐎</span><div><div style="color:#fbbf24;font-size:1.05rem;">Welcome to M³ Nexus</div><div style="font-size:0.85rem;color:#d4d4d8;">Ask anything or start a new chat anytime.</div></div></div>`;
-      chat.appendChild(w);
-    }
-  }
-
-  window.addEventListener("DOMContentLoaded", ensureWelcome);
-  setInterval(ensureWelcome, 1500);
-})();
-</script>
-<script>
-(function () {
-  var horseHTML = '<div id="m3HorseBanner" style="display:flex;align-items:center;gap:10px;padding:10px 14px;margin:8px 10px;border-radius:12px;background:#141417;border:1px solid #fbbf24;color:#fbbf24;font-weight:800;"><span class="horse-anim">🐎</span><span>M3 Nexus Horse is live!</span></div>';
-
-  function showHorse() {
-    var chat = document.getElementById("chat");
-    if (!chat) return;
-    if (!document.getElementById("m3HorseBanner")) {
-      chat.insertAdjacentHTML("afterbegin", horseHTML);
-    }
-    chat.querySelectorAll("*").forEach(function (el) {
-      if (el.children.length === 0 && el.textContent && el.textContent.indexOf("Thinking") !== -1) {
-        el.innerHTML = '<span class="horse-anim">🐎</span><span>M3 Nexus is galloping...</span>';
-      }
-    });
-  }
-
-  window.addEventListener("DOMContentLoaded", showHorse);
-  setInterval(showHorse, 800);
-})();
-
-  <style>
-  .m3-tools-box {
-    max-width: 720px;
-    margin: 14px auto;
-    padding: 16px;
+  #m3UnifiedBanner {
     background: #141417;
     border: 1px solid #fbbf24;
-    border-radius: 16px;
-    font-family: system-ui, -apple-system, sans-serif;
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin: 10px 8px;
     color: #f4f4f5;
+    font-family: system-ui, -apple-system, sans-serif;
   }
-  .m3-tools-title {
-    color: #fbbf24;
-    font-size: 1.05rem;
-    font-weight: 800;
-    margin-bottom: 12px;
+  .m3-u-head {
     display: flex;
     align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .m3-u-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
-  .m3-tools-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px;
-  }
-  .m3-tool-card {
+  .m3-u-card {
     display: block;
     text-decoration: none;
     background: #18181b;
     border: 1px solid #3f3f46;
-    border-radius: 12px;
-    padding: 12px;
+    border-radius: 10px;
+    padding: 9px 10px;
     color: #f4f4f5;
-    transition: transform 0.2s, border-color 0.2s;
   }
-  .m3-tool-card:hover {
-    transform: translateY(-2px);
-    border-color: #fbbf24;
-  }
-  .m3-tool-name {
+  .m3-u-name {
     color: #fbbf24;
     font-weight: 700;
-    font-size: 0.95rem;
-    margin-bottom: 4px;
+    font-size: 0.86rem;
+    margin-bottom: 2px;
   }
-  .m3-tool-desc {
-    font-size: 0.78rem;
+  .m3-u-desc {
+    font-size: 0.72rem;
     color: #a1a1aa;
-    line-height: 1.35;
+    line-height: 1.3;
   }
 </style>
 
-<div class="m3-tools-box">
-  <div class="m3-tools-title">🚀 M³ Nexus — 4 Unique AI & Automation Tools</div>
-  <div class="m3-tools-grid">
-    <a class="m3-tool-card" href="https://www.perplexity.ai" target="_blank" rel="noopener">
-      <div class="m3-tool-name">🔍 Perplexity AI</div>
-      <div class="m3-tool-desc">Live web research & verified answers with sources.</div>
-    </a>
-    <a class="m3-tool-card" href="https://huggingface.co/spaces" target="_blank" rel="noopener">
-      <div class="m3-tool-name">🤗 Hugging Face</div>
-      <div class="m3-tool-desc">Open-source AI demos for image, audio & code.</div>
-    </a>
-    <a class="m3-tool-card" href="https://elevenlabs.io" target="_blank" rel="noopener">
-      <div class="m3-tool-name">🎙️ ElevenLabs</div>
-      <div class="m3-tool-desc">Ultra-realistic AI voice & audio generator.</div>
-    </a>
-    <a class="m3-tool-card" href="https://n8n.io" target="_blank" rel="noopener">
-      <div class="m3-tool-name">⚡ n8n Automation</div>
-      <div class="m3-tool-desc">Connect apps & build smart AI workflows easily.</div>
-    </a>
-  </div>
-</div>
+<script>
+(function () {
+  var bannerHTML =
+    '<div id="m3UnifiedBanner">' +
+      '<div class="m3-u-head">' +
+        '<span class="horse-anim">🐎</span>' +
+        '<div>' +
+          '<div style="color:#fbbf24;font-weight:800;font-size:0.98rem;">Welcome back, Madhan Murali Mohan!</div>' +
+          '<div style="font-size:0.78rem;color:#d4d4d8;">M³ Nexus AI is live &amp; galloping</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="m3-u-grid">' +
+        '<a class="m3-u-card" href="https://www.perplexity.ai" target="_blank" rel="noopener">' +
+          '<div class="m3-u-name">🔍 Perplexity AI</div>' +
+          '<div class="m3-u-desc">Live web research &amp; sources</div>' +
+        '</a>' +
+        '<a class="m3-u-card" href="https://huggingface.co/spaces" target="_blank" rel="noopener">' +
+          '<div class="m3-u-name">🤗 Hugging Face</div>' +
+          '<div class="m3-u-desc">Open-source AI demos</div>' +
+        '</a>' +
+        '<a class="m3-u-card" href="https://elevenlabs.io" target="_blank" rel="noopener">' +
+          '<div class="m3-u-name">🎙️ ElevenLabs</div>' +
+          '<div class="m3-u-desc">Realistic AI voice studio</div>' +
+        '</a>' +
+        '<a class="m3-u-card" href="https://n8n.io" target="_blank" rel="noopener">' +
+          '<div class="m3-u-name">⚡ n8n Workflows</div>' +
+          '<div class="m3-u-desc">Smart app automation</div>' +
+        '</a>' +
+      '</div>' +
+    '</div>';
+
+  function cleanTextNodes(root) {
+    if (!root) return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+    var node;
+    while ((node = walker.nextNode())) {
+      if (node.nodeValue && node.nodeValue.indexOf("}]") !== -1) {
+        node.nodeValue = node.nodeValue.replace(/\}\]/g, "");
+      }
+    }
+  }
+
+  function syncM3UI() {
+    var chat = document.getElementById("chat");
+    if (!chat) return;
+
+    // 1. Welcome + User Name + Mad Horse + 4 Tools card
+    if (!document.getElementById("m3UnifiedBanner")) {
+      chat.insertAdjacentHTML("afterbegin", bannerHTML);
+    }
+
+    // 2. Clean extra }] brackets safely from visible text
+    cleanTextNodes(chat);
+
+    // 3. Replace Thinking... loader with galloping Mad Horse
+    chat.querySelectorAll(".msg").forEach(function (msgEl) {
+      if (msgEl.textContent && msgEl.textContent.trim() === "Thinking...") {
+        msgEl.innerHTML =
+          '<div style="display:flex;align-items:center;gap:10px;color:#fbbf24;font-weight:800;">' +
+            '<span class="horse-anim">🐎</span>' +
+            '<span>M³ Nexus is galloping...</span>' +
+          '</div>';
+      }
+    });
+  }
+
+  window.addEventListener("DOMContentLoaded", syncM3UI);
+  setInterval(syncM3UI, 600);
+})();
+</script>
+  
 </body> 
 </html> 
